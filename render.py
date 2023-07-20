@@ -47,9 +47,19 @@ def render(saveString):
                 (x-sqrt3*scale,y-scale),
                 (x,y-2*scale),
                 (x+sqrt3*scale,y-scale),
+                (x,y)], fill=blockColours[b.blockId])
+
+            draw.polygon([
+                (x,y),
+                (x+sqrt3*scale,y-scale),
                 (x+sqrt3*scale,y+scale),
+                (x,y+2*scale)], fill=(v*.85 for v in blockColours[b.blockId]))
+        
+            draw.polygon([
                 (x,y+2*scale),
-                (x-sqrt3*scale,y+scale)], fill=blockColours[b.blockId])
+                (x-sqrt3*scale,y+scale),
+                (x-sqrt3*scale,y-scale),
+                (x,y)], fill=(v*.75 for v in blockColours[b.blockId]))
             draw.line([
                 (x-sqrt3*scale,y-scale),
                 (x,y-2*scale),

@@ -53,13 +53,13 @@ def render(saveString):
                 (x,y),
                 (x+sqrt3*scale,y-scale),
                 (x+sqrt3*scale,y+scale),
-                (x,y+2*scale)], fill=tuple([v*.85 for v in blockColours[b.blockId]]))
+                (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColours[b.blockId]]))
         
             draw.polygon([
                 (x,y+2*scale),
                 (x-sqrt3*scale,y+scale),
                 (x-sqrt3*scale,y-scale),
-                (x,y)], fill=tuple([v*.75 for v in blockColours[b.blockId]]))
+                (x,y)], fill=tuple([int(v*.75) for v in blockColours[b.blockId]]))
             draw.line([
                 (x-sqrt3*scale,y-scale),
                 (x,y-2*scale),

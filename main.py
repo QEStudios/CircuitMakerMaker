@@ -1,5 +1,4 @@
 from render import render
-
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -7,6 +6,8 @@ import os
 import re
 import requests
 import time
+import asyncio
+
 
 load_dotenv()
 
@@ -50,7 +51,7 @@ async def on_message(message):
                 await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
                 return
             renderStart = time.time()
-            renderedImage, save = render(saveString)
+            renderedImage, save = await render(saveString)
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.png")
             embed = discord.Embed(title="Save info")
@@ -80,7 +81,7 @@ async def on_message(message):
             url = res.text.rstrip("\n") + "/raw"
 
             renderStart = time.time()
-            renderedImage, save = render(saveString)
+            renderedImage, save =  await render(saveString)
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.png")
             embed = discord.Embed(title="Save info")
@@ -113,7 +114,7 @@ async def on_message(message):
                 url = res.text.rstrip("\n") + "/raw"
 
                 renderStart = time.time()
-                renderedImage, save = render(saveString)
+                renderedImage, save = await render(saveString)
                 renderTime = round((time.time() - renderStart) * 1000, 1)
                 previewFile = discord.File(fp=renderedImage, filename="preview.png")
                 embed = discord.Embed(title="Save info")

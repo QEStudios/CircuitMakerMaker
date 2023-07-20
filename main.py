@@ -40,7 +40,7 @@ async def on_message(message):
     # Match sign data
     r"[0-9a-f]*(;[0-9a-fA-F]*)*)"
 )
-    maxSize = 200000
+    maxSize = 500000
     
     if re.search(linkRegex, message.content):
         totalStart = time.time()

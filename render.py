@@ -3,8 +3,10 @@ import numpy as np
 import math
 from io import BytesIO
 from PIL import Image, ImageDraw
+import asyncio
 
-def render(saveString):
+
+async def render(saveString):
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (1600, 1200)

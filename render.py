@@ -5,7 +5,7 @@ from io import BytesIO
 from PIL import Image, ImageDraw
 
 def render(saveString):
-    save = cm2.importSave(saveString)
+    save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (1600, 1200)
     angle = [0,0]

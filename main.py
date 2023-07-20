@@ -39,11 +39,16 @@ async def on_message(message):
     # Match sign data
     r"[0-9a-f]*(;[0-9a-fA-F]*)*)"
 )
+    maxSize = 200000
+    
     if re.search(linkRegex, message.content):
         totalStart = time.time()
         try:
             url = re.search(linkRegex, message.content).group(0)
             saveString = requests.get(url).text
+            if len(saveString) > maxSize:
+                await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+                return
             renderStart = time.time()
             renderedImage, save = render(saveString)
             renderTime = round((time.time() - renderStart) * 1000, 1)
@@ -64,6 +69,9 @@ async def on_message(message):
     elif re.search(saveRegex, message.content):
         totalStart = time.time()
         saveString = re.search(saveRegex, message.content).group(0)
+        if len(saveString) > maxSize:
+            await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+            return
         headers = {"User-Agent": "Mozilla/5.0"}
         payload = {"lexer": "_text", "format": "url", "content": saveString}
         try:
@@ -94,6 +102,9 @@ async def on_message(message):
         if re.match(saveRegex, fileString):
             totalStart = time.time()
             saveString = fileString
+            if len(saveString) > maxSize:
+                await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+                return
             headers = {"User-Agent": "Mozilla/5.0"}
             payload = {"lexer": "_text", "format": "url", "content": saveString}
             try:

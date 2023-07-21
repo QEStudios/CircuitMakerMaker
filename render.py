@@ -72,7 +72,7 @@ async def render(saveString):
     scale = -1
     bounds = []
 
-    for t in range(0,360,5):
+    for t in range(0,360,15):
         angle = math.sin(math.radians(t)) * 22.5 + 45
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
@@ -119,7 +119,7 @@ async def render(saveString):
 
     frames = []
 
-    for t in range(0,360,5):
+    for t in range(0,360,15):
         angle = math.sin(math.radians(t)) * 22.5 + 45
 
         blockColours = [
@@ -172,6 +172,6 @@ async def render(saveString):
         frames.append(im)
 
     stream = BytesIO()
-    frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=2, loop=0)
+    frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=1.5, loop=0)
     stream.seek(0)
     return stream, save

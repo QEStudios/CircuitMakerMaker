@@ -23,7 +23,7 @@ async def render(saveString):
         (175, 131, 76),
         (73, 185, 255),
         (255, 72, 72),
-        (0, 42, 89),
+        (0, 42, 89),1
         (213, 0, 103),
         (84, 54, 35),
         (25, 71, 84),
@@ -48,23 +48,32 @@ async def render(saveString):
         projected[:, 1] *= -1
         return projected
 
+    cubePoints = np.array([
+        [-1,-1,-1],
+        [ 1,-1,-1],
+        [-1, 1,-1],
+        [ 1, 1,-1],
+        [-1,-1, 1],
+        [ 1,-1, 1],
+        [-1, 1, 1],
+        [ 1, 1, 1],
+    ]) * scale
+
+    projectedCube = project(cubePoints)
+
     def drawBlock(b, p):
-        cubePoints = np.array([
-            [],
-            [],
-            []
-        ])
         blockColour = blockColours[b.blockId]
         if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
         y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
+        pCube = projectedCube + (x,y)
         if angle[1] == 0:
             draw.polygon([
-                (x-sqrt3*scale,y-scale),
-                (x,y-2*scale),
-                (x+sqrt3*scale,y-scale),
-                (x,y)], fill=blockColour)
+                pCube[0],
+                pCube[4],
+                pCube[5],
+                pCube[2]], fill=blockColour)
 
             draw.polygon([
                 (x,y),

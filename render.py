@@ -73,7 +73,7 @@ async def render(saveString):
     bounds = []
 
     for t in range(0,360,15):
-        angle = math.sin(math.radians(t)) * 22.5 + 45
+        angle = math.cos(math.radians(t)) * 22.5 + 45
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
         interPoints = project(points, angle)
@@ -120,7 +120,7 @@ async def render(saveString):
     frames = []
 
     for t in range(0,360,15):
-        angle = math.sin(math.radians(t)) * 22.5 + 45
+        angle = math.cos(math.radians(t)) * 22.5 + 45
 
         blockColours = [
             (255, 9, 0),
@@ -170,6 +170,8 @@ async def render(saveString):
             drawBlock(b, p)
     
         frames.append(im)
+
+    frames += reversed(frames)
 
     stream = BytesIO()
     frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=1.5, loop=0)

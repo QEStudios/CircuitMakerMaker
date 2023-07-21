@@ -68,38 +68,37 @@ async def render(saveString):
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
         y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
         pCube = projectedCube + (x,y)
-        if angle[1] == 0:
-            draw.polygon([
-                pCube[0],
-                pCube[4],
-                pCube[5],
-                pCube[2]], fill=blockColour)
+        draw.polygon([
+            pCube[0],
+            pCube[4],
+            pCube[5],
+            pCube[2]], fill=blockColour)
 
-            draw.polygon([
-                (x,y),
-                (x+sqrt3*scale,y-scale),
-                (x+sqrt3*scale,y+scale),
-                (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColour]))
-        
-            draw.polygon([
+        draw.polygon([
+            (x,y),
+            (x+sqrt3*scale,y-scale),
+            (x+sqrt3*scale,y+scale),
+            (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColour]))
+    
+        draw.polygon([
+        (x,y+2*scale),
+        (x-sqrt3*scale,y+scale),
+        (x-sqrt3*scale,y-scale),
+        (x,y)], fill=tuple([int(v*.75) for v in blockColour]))
+
+        draw.line([
+            (x-sqrt3*scale,y-scale),
+            (x,y-2*scale),
+            (x+sqrt3*scale,y-scale),
+            (x+sqrt3*scale,y+scale),
             (x,y+2*scale),
             (x-sqrt3*scale,y+scale),
             (x-sqrt3*scale,y-scale),
-            (x,y)], fill=tuple([int(v*.75) for v in blockColour]))
-
-            draw.line([
-                (x-sqrt3*scale,y-scale),
-                (x,y-2*scale),
-                (x+sqrt3*scale,y-scale),
-                (x+sqrt3*scale,y+scale),
-                (x,y+2*scale),
-                (x-sqrt3*scale,y+scale),
-                (x-sqrt3*scale,y-scale),
-                (x,y),
-                (x+sqrt3*scale,y-scale)], fill=0, width=int(scale/6), joint="curve")
-            draw.line([
-                (x,y),
-                (x,y+2*scale)], fill=0, width=int(scale/6), joint="curve")
+            (x,y),
+            (x+sqrt3*scale,y-scale)], fill=0, width=int(scale/6), joint="curve")
+        draw.line([
+            (x,y),
+            (x,y+2*scale)], fill=0, width=int(scale/6), joint="curve")
 
     positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
     points = np.array(positions)

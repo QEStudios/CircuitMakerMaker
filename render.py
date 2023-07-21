@@ -10,7 +10,7 @@ async def render(saveString):
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (1600, 1200)
-    angle = [0,0]
+    angle = 45
 
     blockColours = [
         (255, 9, 0),
@@ -32,17 +32,28 @@ async def render(saveString):
     sqrt3 = math.sqrt(3)
     sqrt2 = math.sqrt(2)
     def project(points):
-        if angle[1] == 0:
-            matrix = np.array([
-                [sqrt3, 0, -sqrt3],
-                [1, 2, 1],
-                [sqrt2, -sqrt2, sqrt2]], dtype=float)
+        a = math.asin(math.tan(math.radians(30)))
+        aMatrix = np.array([
+            [1, 0, 0],
+            [0, math.cos(a), math.sin(a)],
+            [0, -math.sin(a), math.cos(a)],
+        ], dtype=float)
+        bMatrix = np.array([
+            [math.cos(angle), 0, -math.sin(angle)],
+            [0, 1, 0],
+            [math.sin(angle), 0, math.cos(angle)]
+        ], dtype=float)
+        matrix = np.matmul(aMatrix, bMatrix) * math.sqrt(6)
         projected = np.dot(matrix, points.T).T
         projected[:, 1] *= -1
         return projected
 
     def drawBlock(b, p):
-        print(b.blockId, b.properties)
+        cubePoints = np.array([
+            [],
+            [],
+            []
+        ])
         blockColour = blockColours[b.blockId]
         if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
@@ -62,10 +73,11 @@ async def render(saveString):
                 (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColour]))
         
             draw.polygon([
-                (x,y+2*scale),
-                (x-sqrt3*scale,y+scale),
-                (x-sqrt3*scale,y-scale),
-                (x,y)], fill=tuple([int(v*.75) for v in blockColour]))
+            (x,y+2*scale),
+            (x-sqrt3*scale,y+scale),
+            (x-sqrt3*scale,y-scale),
+            (x,y)], fill=tuple([int(v*.75) for v in blockColour]))
+
             draw.line([
                 (x-sqrt3*scale,y-scale),
                 (x,y-2*scale),

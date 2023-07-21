@@ -72,7 +72,8 @@ async def render(saveString):
     scale = -1
     bounds = []
 
-    for angle in range(0,360,5):
+    for t in range(0,360,5):
+        angle = math.sin(math.radians(t)) * 22.5 + 45
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
         interPoints = project(points, angle)
@@ -118,7 +119,8 @@ async def render(saveString):
 
     frames = []
 
-    for angle in range(0, 360, 5):
+    for t in range(0,360,5):
+        angle = math.sin(math.radians(t)) * 22.5 + 45
 
         blockColours = [
             (255, 9, 0),

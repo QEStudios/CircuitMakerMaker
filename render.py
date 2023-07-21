@@ -78,11 +78,17 @@ async def render(saveString):
 
         draw.line([
             pCube[0],
+            pCube[4],
+            pCube[6],
+            pCube[7],
+            pCube[3],
             pCube[1],
-            ], fill=0, width=int(scale/8), joint="curve")
+            pCube[0],
+            pCube[2],
+            pCube[6]], fill=0, width=int(scale/8), joint="curve")
         draw.line([
-            pCube[5],
-            pCube[7]], fill=0, width=int(scale/8), joint="curve")
+            pCube[2],
+            pCube[3]], fill=0, width=int(scale/8), joint="curve")
 
     positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
     points = np.array(positions)

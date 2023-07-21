@@ -44,7 +44,7 @@ async def render(saveString):
     def drawBlock(b, p):
         print(b.blockId, b.properties)
         if b.blockId == cm2.LED and len(b.properties) == 3:
-            blockColour = b.properties
+            blockColour = tuple(b.properties)
         else:
             blockColour = blockColours[b.blockId]
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale

@@ -67,12 +67,12 @@ async def render(saveString):
             pCube[3]], fill=0, width=int(scale/8), joint="curve")
     save = cm2.importSave(saveString, snapToGrid=False)
 
-    size = (800, 600)
+    size = (400, 300)
 
     scale = -1
     bounds = []
 
-    for angle in range(0,360,5):
+    for angle in range(0,360,15):
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
         interPoints = project(points, angle)
@@ -118,7 +118,7 @@ async def render(saveString):
 
     frames = []
 
-    for angle in range(0, 360, 5):
+    for angle in range(0, 360, 15):
 
         blockColours = [
             (255, 9, 0),

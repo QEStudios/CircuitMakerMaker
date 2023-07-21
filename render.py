@@ -54,7 +54,8 @@ async def render(saveString):
             blockColour = tuple([int(v) for v in b.properties])
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
         y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
-        pCube = projectedCube[0,2] + np.repeat(np.array([[x,y]]),[1,7],axis=0)
+        posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
+        pCube = projectedCube[:, :2] + posArray
         draw.polygon([
             pCube[0],
             pCube[4],

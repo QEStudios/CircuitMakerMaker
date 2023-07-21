@@ -64,10 +64,10 @@ async def render(saveString):
             pCube[7]], fill=blockColour)
 
         draw.polygon([
-            pCube[5],
-            pCube[4],
-            pCube[6],
-            pCube[7]], fill=tuple([int(v*.85) for v in blockColour]))
+            pCube[1],
+            pCube[0],
+            pCube[2],
+            pCube[3]], fill=tuple([int(v*.85) for v in blockColour]))
     
         draw.polygon([
             pCube[2],

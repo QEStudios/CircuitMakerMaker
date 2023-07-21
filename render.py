@@ -32,9 +32,9 @@ async def render(saveString):
 
     sqrt3 = math.sqrt(3)
     sqrt2 = math.sqrt(2)
-    def project(points):
+    def project(points, rot):
         a = math.asin(math.tan(math.radians(30)))
-        b = math.radians(angle % 90)
+        b = math.radians(rot)
         aMatrix = np.array([
             [1, 0, 0],
             [0, math.cos(a), math.sin(a)],
@@ -92,7 +92,7 @@ async def render(saveString):
 
     positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
     points = np.array(positions)
-    interPoints = project(points)
+    interPoints = project(points, angle)
     pointIndices = np.flip(np.argsort(interPoints[:, 2]))
     projectedPoints = interPoints[pointIndices]
     sortedBlocks = np.array(save.blocks)[pointIndices]
@@ -133,7 +133,7 @@ async def render(saveString):
         [-0.5,0.5,0.5],
         [0.5,0.5,0.5],
     ]) * scale
-    projectedCube = project(cubePoints)
+    projectedCube = project(cubePoints, angle % 90)
 
     im = Image.new("RGB", (size[0], size[1]), color=(255,255,255))
     draw = ImageDraw.Draw(im)

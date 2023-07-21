@@ -8,13 +8,117 @@ import asyncio
 
 
 async def render(saveString):
+    def project(points, rot):
+        a = math.asin(math.tan(math.radians(30)))
+        b = math.radians(rot)
+        aMatrix = np.array([
+            [1, 0, 0],
+            [0, math.cos(a), math.sin(a)],
+            [0, -math.sin(a), math.cos(a)],
+        ], dtype=float)
+        bMatrix = np.array([
+            [math.cos(b), 0, -math.sin(b)],
+            [0, 1, 0],
+            [math.sin(b), 0, math.cos(b)]
+        ], dtype=float)
+        matrix = np.matmul(aMatrix, bMatrix) * math.sqrt(6)
+        projected = np.dot(matrix, points.T).T
+        projected[:, 1] *= -1
+        return projected
+
+    def drawBlock(b, p):
+        blockColour = blockColours[b.blockId]
+        if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
+            blockColour = tuple([int(v) for v in b.properties])
+        x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
+        y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
+        posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
+        pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
+        draw.polygon([
+            pCube[3],
+            pCube[2],
+            pCube[6],
+            pCube[7]], fill=blockColour)
+
+        draw.polygon([
+            pCube[1],
+            pCube[0],
+            pCube[2],
+            pCube[3]], fill=tuple([int(v*.85) for v in blockColour]))
+
+        draw.polygon([
+            pCube[2],
+            pCube[0],
+            pCube[4],
+            pCube[6]], fill=tuple([int(v*.75) for v in blockColour]))
+
+        draw.line([
+            pCube[0],
+            pCube[4],
+            pCube[6],
+            pCube[7],
+            pCube[3],
+            pCube[1],
+            pCube[0],
+            pCube[2],
+            pCube[6]], fill=0, width=int(scale/8), joint="curve")
+        draw.line([
+            pCube[2],
+            pCube[3]], fill=0, width=int(scale/8), joint="curve")
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (800, 600)
 
+    scale = 10^10
+    bounds = []
+
+    for angle in range(0,360,5):
+        positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
+        points = np.array(positions)
+        interPoints = project(points, angle)
+        pointIndices = np.flip(np.argsort(interPoints[:, 2]))
+        projectedPoints = interPoints[pointIndices]
+        sortedBlocks = np.array(save.blocks)[pointIndices]
+
+        tmpBounds = [[projectedPoints[0][0], projectedPoints[0][0]], [projectedPoints[0][1], projectedPoints[0][1]]]
+
+        for p in projectedPoints:
+            if p[0] < tmpBounds[0][0]:
+                tmpBounds[0][0] = p[0]
+            if p[0] > tmpBounds[0][1]:
+                tmpBounds[0][1] = p[0]
+            
+            if p[1] < tmpBounds[1][0]:
+                tmpBounds[1][0] = p[1]
+            if p[1] > tmpBounds[1][1]:
+                tmpBounds[1][1] = p[1]
+
+        tmpBounds[0][0] -= 3
+        tmpBounds[0][1] += 3
+        tmpBounds[1][0] -= 3
+        tmpBounds[1][1] += 3
+
+        sizeX = tmpBounds[0][1] - tmpBounds[0][0]
+        sizeY = tmpBounds[1][1] - tmpBounds[1][0]
+
+        scaleX = int(size[0] / sizeX)
+        scaleY = int(size[1] / sizeY)
+
+        tmpScale = min(scaleX, scaleY)
+
+        if scale > tmpScale:
+            scale = tmpScale
+            bounds = tmpBounds
+
+    sizeX = bounds[0][1] - bounds[0][0]
+    sizeY = bounds[1][1] - bounds[1][0]
+
+    scaleX = int(size[0] / sizeX)
+    scaleY = int(size[1] / sizeY)
+
     frames = []
 
-    for angle in range(0, 360, 15):
+    for angle in range(0, 360, 5):
 
         blockColours = [
             (255, 9, 0),
@@ -35,63 +139,6 @@ async def render(saveString):
 
         sqrt3 = math.sqrt(3)
         sqrt2 = math.sqrt(2)
-        def project(points, rot):
-            a = math.asin(math.tan(math.radians(30)))
-            b = math.radians(rot)
-            aMatrix = np.array([
-                [1, 0, 0],
-                [0, math.cos(a), math.sin(a)],
-                [0, -math.sin(a), math.cos(a)],
-            ], dtype=float)
-            bMatrix = np.array([
-                [math.cos(b), 0, -math.sin(b)],
-                [0, 1, 0],
-                [math.sin(b), 0, math.cos(b)]
-            ], dtype=float)
-            matrix = np.matmul(aMatrix, bMatrix) * math.sqrt(6)
-            projected = np.dot(matrix, points.T).T
-            projected[:, 1] *= -1
-            return projected
-
-        def drawBlock(b, p):
-            blockColour = blockColours[b.blockId]
-            if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
-                blockColour = tuple([int(v) for v in b.properties])
-            x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
-            y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
-            posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
-            pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
-            draw.polygon([
-                pCube[3],
-                pCube[2],
-                pCube[6],
-                pCube[7]], fill=blockColour)
-
-            draw.polygon([
-                pCube[1],
-                pCube[0],
-                pCube[2],
-                pCube[3]], fill=tuple([int(v*.85) for v in blockColour]))
-        
-            draw.polygon([
-                pCube[2],
-                pCube[0],
-                pCube[4],
-                pCube[6]], fill=tuple([int(v*.75) for v in blockColour]))
-
-            draw.line([
-                pCube[0],
-                pCube[4],
-                pCube[6],
-                pCube[7],
-                pCube[3],
-                pCube[1],
-                pCube[0],
-                pCube[2],
-                pCube[6]], fill=0, width=int(scale/8), joint="curve")
-            draw.line([
-                pCube[2],
-                pCube[3]], fill=0, width=int(scale/8), joint="curve")
 
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
@@ -99,32 +146,6 @@ async def render(saveString):
         pointIndices = np.flip(np.argsort(interPoints[:, 2]))
         projectedPoints = interPoints[pointIndices]
         sortedBlocks = np.array(save.blocks)[pointIndices]
-
-        bounds = [[projectedPoints[0][0], projectedPoints[0][0]], [projectedPoints[0][1], projectedPoints[0][1]]]
-
-        for p in projectedPoints:
-            if p[0] < bounds[0][0]:
-                bounds[0][0] = p[0]
-            if p[0] > bounds[0][1]:
-                bounds[0][1] = p[0]
-            
-            if p[1] < bounds[1][0]:
-                bounds[1][0] = p[1]
-            if p[1] > bounds[1][1]:
-                bounds[1][1] = p[1]
-
-        bounds[0][0] -= 3
-        bounds[0][1] += 3
-        bounds[1][0] -= 3
-        bounds[1][1] += 3
-
-        sizeX = bounds[0][1] - bounds[0][0]
-        sizeY = bounds[1][1] - bounds[1][0]
-
-        scaleX = int(size[0] / sizeX)
-        scaleY = int(size[1] / sizeY)
-
-        scale = min(scaleX, scaleY)
 
         cubePoints = np.array([
             [-0.5,-0.5,-0.5],

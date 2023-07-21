@@ -10,7 +10,7 @@ async def render(saveString):
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (1600, 1200)
-    angle = 45
+    angle = 65
 
     blockColours = [
         (255, 9, 0),

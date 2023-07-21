@@ -3,6 +3,7 @@ import numpy as np
 import math
 from io import BytesIO
 from PIL import Image, ImageDraw
+import random
 import asyncio
 
 
@@ -10,7 +11,7 @@ async def render(saveString):
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (1600, 1200)
-    angle = 65
+    angle = random.randint(0,360)
 
     blockColours = [
         (255, 9, 0),
@@ -33,7 +34,7 @@ async def render(saveString):
     sqrt2 = math.sqrt(2)
     def project(points):
         a = math.asin(math.tan(math.radians(30)))
-        b = math.radians(angle)
+        b = math.radians(angle % 90)
         aMatrix = np.array([
             [1, 0, 0],
             [0, math.cos(a), math.sin(a)],

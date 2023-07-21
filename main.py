@@ -88,12 +88,13 @@ async def on_message(message):
             embed.add_field(name="Blocks", value=str(len(save.blocks)), inline=True)
             embed.add_field(name="Connections", value="\"ill add this later\" - skm", inline=True)
             embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
+            embed.add_field(name="Link", value=url)
             embed.set_image(url="attachment://preview.gif")
 
             totalTime = round((time.time() - totalStart) * 1000, 1)
             embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
 
-            await message.reply(f"Here's a dpaste link for that save: {url}\nAnd here's a preview of that save, too!", file=previewFile, embed=embed, mention_author=False)
+            await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
         except Exception as e:
             print(f"An error occured while uploading to dpaste: {e}")
             await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
@@ -121,12 +122,13 @@ async def on_message(message):
                 embed.add_field(name="Blocks", value=str(len(save.blocks)), inline=True)
                 embed.add_field(name="Connections", value="\"ill add this later\" - skm", inline=True)
                 embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
+                embed.add_field(name="Link", value=url)
                 embed.set_image(url="attachment://preview.gif")
 
                 totalTime = round((time.time() - totalStart) * 1000, 1)
                 embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
 
-                await message.reply(f"Here's a dpaste link for that save: {url}\nAnd here's a preview of that save, too!", file=previewFile, embed=embed, mention_author=False)
+                await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
             except Exception as e:
                 print(f"An error occured while uploading to dpaste: {e}")
                 await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")

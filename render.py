@@ -67,7 +67,7 @@ async def render(saveString):
             pCube[3]], fill=0, width=int(scale/8), joint="curve")
     save = cm2.importSave(saveString, snapToGrid=False)
 
-    size = (400, 300)
+    size = (800, 600)
 
     scale = -1
     bounds = []

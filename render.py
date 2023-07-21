@@ -72,7 +72,7 @@ async def render(saveString):
     scale = -1
     bounds = []
 
-    for t in range(0,180,15):
+    for t in range(0,195,15):
         angle = math.cos(math.radians(t)) * 22.5 + 45
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
@@ -119,7 +119,7 @@ async def render(saveString):
 
     frames = []
 
-    for t in range(0,180,15):
+    for t in range(0,195,15):
         angle = math.cos(math.radians(t)) * 22.5 + 45
 
         blockColours = [

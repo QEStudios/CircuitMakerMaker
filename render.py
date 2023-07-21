@@ -48,19 +48,6 @@ async def render(saveString):
         projected[:, 1] *= -1
         return projected
 
-    cubePoints = np.array([
-        [-1,-1,-1],
-        [ 1,-1,-1],
-        [-1, 1,-1],
-        [ 1, 1,-1],
-        [-1,-1, 1],
-        [ 1,-1, 1],
-        [-1, 1, 1],
-        [ 1, 1, 1],
-    ]) * scale
-
-    projectedCube = project(cubePoints)
-
     def drawBlock(b, p):
         blockColour = blockColours[b.blockId]
         if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
@@ -133,6 +120,17 @@ async def render(saveString):
 
     scale = min(scaleX, scaleY)
 
+    cubePoints = np.array([
+        [-1,-1,-1],
+        [ 1,-1,-1],
+        [-1, 1,-1],
+        [ 1, 1,-1],
+        [-1,-1, 1],
+        [ 1,-1, 1],
+        [-1, 1, 1],
+        [ 1, 1, 1],
+    ]) * scale
+    projectedCube = project(cubePoints)
 
     im = Image.new("RGB", (size[0], size[1]), color=(255,255,255))
     draw = ImageDraw.Draw(im)

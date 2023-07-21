@@ -123,14 +123,14 @@ async def render(saveString):
     scale = min(scaleX, scaleY)
 
     cubePoints = np.array([
-        [-1,-1,-1],
-        [ 1,-1,-1],
-        [-1, 1,-1],
-        [ 1, 1,-1],
-        [-1,-1, 1],
-        [ 1,-1, 1],
-        [-1, 1, 1],
-        [ 1, 1, 1],
+        [0,0,0],
+        [1,0,0],
+        [0,1,0],
+        [1,1,0],
+        [0,0,1],
+        [1,0,1],
+        [0,1,1],
+        [1,1,1],
     ]) * scale
     projectedCube = project(cubePoints)
 

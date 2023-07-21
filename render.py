@@ -64,16 +64,16 @@ async def render(saveString):
             pCube[7]], fill=blockColour)
 
         draw.polygon([
-            (x,y),
-            (x+sqrt3*scale,y-scale),
-            (x+sqrt3*scale,y+scale),
-            (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColour]))
+            pCube[5],
+            pCube[4],
+            pCube[6],
+            pCube[7]], fill=tuple([int(v*.85) for v in blockColour]))
     
         draw.polygon([
-            (x,y+2*scale),
-            (x-sqrt3*scale,y+scale),
-            (x-sqrt3*scale,y-scale),
-            (x,y)], fill=tuple([int(v*.75) for v in blockColour]))
+            pCube[2],
+            pCube[0],
+            pCube[4],
+            pCube[6]], fill=tuple([int(v*.75) for v in blockColour]))
 
         draw.line([
             (x-sqrt3*scale,y-scale),

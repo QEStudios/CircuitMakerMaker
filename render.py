@@ -110,6 +110,8 @@ async def render(saveString):
             scale = tmpScale
             bounds = tmpBounds
 
+    print(bounds)
+
     sizeX = bounds[0][1] - bounds[0][0]
     sizeY = bounds[1][1] - bounds[1][0]
 

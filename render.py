@@ -33,15 +33,16 @@ async def render(saveString):
     sqrt2 = math.sqrt(2)
     def project(points):
         a = math.asin(math.tan(math.radians(30)))
+        b = math.radians(angle)
         aMatrix = np.array([
             [1, 0, 0],
             [0, math.cos(a), math.sin(a)],
             [0, -math.sin(a), math.cos(a)],
         ], dtype=float)
         bMatrix = np.array([
-            [math.cos(angle), 0, -math.sin(angle)],
+            [math.cos(b), 0, -math.sin(b)],
             [0, 1, 0],
-            [math.sin(angle), 0, math.cos(angle)]
+            [math.sin(b), 0, math.cos(b)]
         ], dtype=float)
         matrix = np.matmul(aMatrix, bMatrix) * math.sqrt(6)
         projected = np.dot(matrix, points.T).T

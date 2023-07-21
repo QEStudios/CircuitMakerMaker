@@ -42,6 +42,7 @@ async def render(saveString):
         return projected
 
     def drawBlock(b, p):
+        print(b.blockId, b.properties)
         if b.blockId == cm2.LED and len(b.properties) == 3:
             blockColour = b.properties
         else:

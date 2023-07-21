@@ -54,7 +54,7 @@ async def render(saveString):
         if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
-        y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
+        y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale - scale
         posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
         pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
         draw.polygon([
@@ -123,14 +123,14 @@ async def render(saveString):
     scale = min(scaleX, scaleY)
 
     cubePoints = np.array([
-        [-1,-1,-1],
-        [0 ,-1,-1],
-        [-1,0 ,-1],
-        [0 ,0 ,-1],
-        [-1,-1,0 ],
-        [0 ,-1,0 ],
-        [-1,0 ,0 ],
-        [0 ,0 ,0 ],
+        [0,0,0],
+        [1,0,0],
+        [0,1,0],
+        [1,1,0],
+        [0,0,1],
+        [1,0,1],
+        [0,1,1],
+        [1,1,1],
     ]) * scale
     projectedCube = project(cubePoints)
 

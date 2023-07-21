@@ -69,7 +69,7 @@ async def render(saveString):
 
     size = (800, 600)
 
-    scale = 10^10
+    scale = -1
     bounds = []
 
     for angle in range(0,360,5):
@@ -106,11 +106,9 @@ async def render(saveString):
 
         tmpScale = min(scaleX, scaleY)
 
-        if scale > tmpScale:
+        if scale > tmpScale or scale == -1:
             scale = tmpScale
             bounds = tmpBounds
-
-    print(bounds)
 
     sizeX = bounds[0][1] - bounds[0][0]
     sizeY = bounds[1][1] - bounds[1][0]

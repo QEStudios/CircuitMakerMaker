@@ -42,6 +42,10 @@ async def render(saveString):
         return projected
 
     def drawBlock(b, p):
+        if b.blockId == cm2.LED and len(b.properties) == 3:
+            blockColour = b.properties
+        else:
+            blockColour = blockColours[b.blockId]
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
         y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
         if angle[1] == 0:
@@ -49,19 +53,19 @@ async def render(saveString):
                 (x-sqrt3*scale,y-scale),
                 (x,y-2*scale),
                 (x+sqrt3*scale,y-scale),
-                (x,y)], fill=blockColours[b.blockId])
+                (x,y)], fill=blockColour)
 
             draw.polygon([
                 (x,y),
                 (x+sqrt3*scale,y-scale),
                 (x+sqrt3*scale,y+scale),
-                (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColours[b.blockId]]))
+                (x,y+2*scale)], fill=tuple([int(v*.85) for v in blockColour]))
         
             draw.polygon([
                 (x,y+2*scale),
                 (x-sqrt3*scale,y+scale),
                 (x-sqrt3*scale,y-scale),
-                (x,y)], fill=tuple([int(v*.75) for v in blockColours[b.blockId]]))
+                (x,y)], fill=tuple([int(v*.75) for v in blockColour]))
             draw.line([
                 (x-sqrt3*scale,y-scale),
                 (x,y-2*scale),

@@ -58,6 +58,7 @@ async def on_message(message):
             embed.add_field(name="Blocks", value=str(len(save.blocks)), inline=True)
             embed.add_field(name="Connections", value="\"ill add this later\" - skm", inline=True)
             embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
+            embed.add_field(name="Link", value=url)
             embed.set_image(url="attachment://preview.gif")
 
             totalTime = round((time.time() - totalStart) * 1000, 1)

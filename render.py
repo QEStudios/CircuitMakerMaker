@@ -43,10 +43,9 @@ async def render(saveString):
 
     def drawBlock(b, p):
         print(b.blockId, b.properties)
+        blockColour = blockColours[b.blockId]
         if b.blockId == cm2.LED and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in blockColour])
-        else:
-            blockColour = blockColours[b.blockId]
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
         y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
         if angle[1] == 0:

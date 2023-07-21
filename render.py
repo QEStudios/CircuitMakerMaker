@@ -76,19 +76,19 @@ async def render(saveString):
             pCube[4],
             pCube[6]], fill=tuple([int(v*.75) for v in blockColour]))
 
-        # draw.line([
-        #     (x-sqrt3*scale,y-scale),
-        #     (x,y-2*scale),
-        #     (x+sqrt3*scale,y-scale),
-        #     (x+sqrt3*scale,y+scale),
-        #     (x,y+2*scale),
-        #     (x-sqrt3*scale,y+scale),
-        #     (x-sqrt3*scale,y-scale),
-        #     (x,y),
-        #     (x+sqrt3*scale,y-scale)], fill=0, width=int(scale/6), joint="curve")
-        # draw.line([
-        #     (x,y),
-        #     (x,y+2*scale)], fill=0, width=int(scale/6), joint="curve")
+        draw.line([
+            pCube[0],
+            pCube[2],
+            pCube[3],
+            pCube[7],
+            pCube[5],
+            pCube[4],
+            pCube[0],
+            pCube[6],
+            pCube[7]], fill=0, width=int(scale/8), joint="curve")
+        draw.line([
+            pCube[6],
+            pCube[4]], fill=0, width=int(scale/8), joint="curve")
 
     positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
     points = np.array(positions)

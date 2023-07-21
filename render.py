@@ -52,27 +52,27 @@ async def render(saveString):
             pCube[4],
             pCube[6]], fill=tuple([int(v*.75) for v in blockColour]))
 
-        draw.line([
-            pCube[0],
-            pCube[4],
-            pCube[6],
-            pCube[7],
-            pCube[3],
-            pCube[1],
-            pCube[0],
-            pCube[2],
-            pCube[6]], fill=0, width=int(scale/8), joint="curve")
-        draw.line([
-            pCube[2],
-            pCube[3]], fill=0, width=int(scale/8), joint="curve")
+        # draw.line([
+        #     pCube[0],
+        #     pCube[4],
+        #     pCube[6],
+        #     pCube[7],
+        #     pCube[3],
+        #     pCube[1],
+        #     pCube[0],
+        #     pCube[2],
+        #     pCube[6]], fill=0, width=int(scale/8), joint="curve")
+        # draw.line([
+        #     pCube[2],
+        #     pCube[3]], fill=0, width=int(scale/8), joint="curve")
     save = cm2.importSave(saveString, snapToGrid=False)
 
-    size = (800, 600)
+    size = (600, 450)
 
     scale = -1
     bounds = []
 
-    for angle in range(0,360,15):
+    for angle in range(0,360,5):
         positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
         points = np.array(positions)
         interPoints = project(points, angle)
@@ -118,7 +118,7 @@ async def render(saveString):
 
     frames = []
 
-    for angle in range(0, 360, 15):
+    for angle in range(0, 360, 5):
 
         blockColours = [
             (255, 9, 0),

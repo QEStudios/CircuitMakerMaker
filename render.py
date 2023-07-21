@@ -58,10 +58,10 @@ async def render(saveString):
         posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
         pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
         draw.polygon([
-            pCube[0],
             pCube[4],
             pCube[5],
-            pCube[2]], fill=blockColour)
+            pCube[6],
+            pCube[7]], fill=blockColour)
 
         draw.polygon([
             (x,y),

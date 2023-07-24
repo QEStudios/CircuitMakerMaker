@@ -76,31 +76,12 @@ async def render(saveString):
     scale = -1
     bounds = []
 
-    physicalBounds = [[save.blocks[0].pos[0],save.blocks[0].pos[0]], [save.blocks[0].pos[1],save.blocks[0].pos[1]], [save.blocks[0].pos[2],save.blocks[0].pos[2]]]
+    center = np.array([0,0,0], dtype="float64")
 
-    for p in [b.pos for b in save.blocks]:
-        if p[0] < physicalBounds[0][0]:
-            physicalBounds[0][0] = p[0]
-        if p[0] > physicalBounds[0][1]:
-            physicalBounds[0][1] = p[0]
-        
-        if p[1] < physicalBounds[1][0]:
-            physicalBounds[1][0] = p[1]
-        if p[1] > physicalBounds[1][1]:
-            physicalBounds[1][1] = p[1]
-        
-        if p[2] < physicalBounds[2][0]:
-            physicalBounds[2][0] = p[2]
-        if p[2] > physicalBounds[2][1]:
-            physicalBounds[2][1] = p[2]
+    for b in save.blocks:
+        center += np.array(b.pos)
 
-    center = [
-        physicalBounds[0][0] + (physicalBounds[0][1] - physicalBounds[0][0])/2,
-        physicalBounds[1][0] + (physicalBounds[1][1] - physicalBounds[1][0])/2,
-        physicalBounds[2][0] + (physicalBounds[2][1] - physicalBounds[2][0])/2,
-    ]
-
-    print(physicalBounds)
+    center = (center / len(save.blocks)).tolist()
 
     print(center)
 

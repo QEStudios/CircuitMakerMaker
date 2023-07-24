@@ -48,8 +48,11 @@ async def on_message(message):
             url = re.search(linkRegex, message.content).group(0)
             saveString = requests.get(url).text
             if len(saveString) > maxSize:
-                await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+                await message.reply(f"Sorry, I can't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
                 return
+
+            renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
+            
             renderStart = time.time()
             renderedImage, save = await render(saveString)
             renderTime = round((time.time() - renderStart) * 1000, 1)
@@ -64,6 +67,7 @@ async def on_message(message):
             totalTime = round((time.time() - totalStart) * 1000, 1)
             embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
 
+            await renderingMessage.delete()
             await message.reply("Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
             renderedImage.close()
         except Exception as e:
@@ -81,6 +85,8 @@ async def on_message(message):
             res.raise_for_status()
             url = res.text.rstrip("\n") + "/raw"
 
+            renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
+
             renderStart = time.time()
             renderedImage, save =  await render(saveString)
             renderTime = round((time.time() - renderStart) * 1000, 1)
@@ -95,6 +101,7 @@ async def on_message(message):
             totalTime = round((time.time() - totalStart) * 1000, 1)
             embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
 
+            await renderingMessage.delete()
             await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
         except Exception as e:
             print(f"An error occured while uploading to dpaste: {e}")
@@ -115,6 +122,8 @@ async def on_message(message):
                 res.raise_for_status()
                 url = res.text.rstrip("\n") + "/raw"
 
+                renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
+
                 renderStart = time.time()
                 renderedImage, save = await render(saveString)
                 renderTime = round((time.time() - renderStart) * 1000, 1)
@@ -129,6 +138,7 @@ async def on_message(message):
                 totalTime = round((time.time() - totalStart) * 1000, 1)
                 embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
 
+                await renderingMessage.delete()
                 await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
             except Exception as e:
                 print(f"An error occured while uploading to dpaste: {e}")

@@ -76,7 +76,7 @@ async def render(saveString):
     scale = -1
     bounds = []
 
-    physicalBounds = [[0,0], [0,0], [0,0]]
+    physicalBounds = [[save.blocks[0].pos[0],save.blocks[0].pos[0]], [save.blocks[0].pos[1],save.blocks[0].pos[1]], [save.blocks[0].pos[2],save.blocks[0].pos[2]]]
 
     for p in [b.pos for b in save.blocks]:
         if p[0] < physicalBounds[0][0]:
@@ -100,13 +100,20 @@ async def render(saveString):
         physicalBounds[2][0] + (physicalBounds[2][1] - physicalBounds[2][0])/2,
     ]
 
+    print(physicalBounds)
+
+    print(center)
+
+    print((0 - center[0], 0 - center[1], center[2]-0))
+
     positions = [(b.x - center[0], b.y - center[1], center[2]-b.z) for b in save.blocks]
     points = np.array(positions)
 
     projectedPointsList = []
     sortedBlocksList = []
 
-    for angle in range(0,360,10):
+    for r in range(0,36):
+        angle = r * 10 + 5
         interPoints = project(points, angle)
         pointIndices = np.flip(np.argsort(interPoints[:, 2]))
         projectedPoints = interPoints[pointIndices]
@@ -118,7 +125,7 @@ async def render(saveString):
     for i in range(0,36):
         projectedPoints = projectedPointsList[i]
 
-        angle = i * 10
+        angle = i * 10 + 18
         
         tmpBounds = [[projectedPoints[0][0], projectedPoints[0][0]], [projectedPoints[0][1], projectedPoints[0][1]]]
 
@@ -162,7 +169,7 @@ async def render(saveString):
         projectedPoints = projectedPointsList[i]
         sortedBlocks = sortedBlocksList[i]
 
-        angle = i * 10
+        angle = i * 10 + 5
 
         blockColours = [
             (255, 9, 0),

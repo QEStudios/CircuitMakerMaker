@@ -27,13 +27,17 @@ async def render(saveString):
         return projected
 
     def drawBlock(b, p):
-        blockColour = blockColours[b.blockId]
+        if b.state == True:
+            blockColour = tuple((np.array(blockColours[b.blockId]) + np.array([64,64,64])).tolist())
+        else:
+            blockColour = blockColours[b.blockId]
         if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
         x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
         y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
         posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
         pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
+        sideShades = [0.85, 0.75, 0.6, 0.7]
         draw.polygon([
             pCube[3],
             pCube[2],
@@ -44,13 +48,13 @@ async def render(saveString):
             pCube[1],
             pCube[0],
             pCube[2],
-            pCube[3]], fill=tuple([int(v*.85) for v in blockColour]))
+            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour]))
 
         draw.polygon([
             pCube[2],
             pCube[0],
             pCube[4],
-            pCube[6]], fill=tuple([int(v*.75) for v in blockColour]))
+            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour]))
 
         # draw.line([
         #     pCube[0],
@@ -72,15 +76,50 @@ async def render(saveString):
     scale = -1
     bounds = []
 
-    for t in range(0,195,15):
-        angle = math.cos(math.radians(t)) * 22.5 + 45
-        positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
-        points = np.array(positions)
+    physicalBounds = [[0,0], [0,0], [0,0]]
+
+    for p in [b.pos for b in save.blocks]:
+        if p[0] < physicalBounds[0][0]:
+            physicalBounds[0][0] = p[0]
+        if p[0] > physicalBounds[0][1]:
+            physicalBounds[0][1] = p[0]
+        
+        if p[1] < physicalBounds[1][0]:
+            physicalBounds[1][0] = p[1]
+        if p[1] > physicalBounds[1][1]:
+            physicalBounds[1][1] = p[1]
+        
+        if p[2] < physicalBounds[2][0]:
+            physicalBounds[2][0] = p[2]
+        if p[2] > physicalBounds[2][1]:
+            physicalBounds[2][1] = p[2]
+
+    center = [
+        physicalBounds[0][0] + (physicalBounds[0][1] - physicalBounds[0][0])/2,
+        physicalBounds[1][0] + (physicalBounds[1][1] - physicalBounds[1][0])/2,
+        physicalBounds[2][0] + (physicalBounds[2][1] - physicalBounds[2][0])/2,
+    ]
+
+    positions = [(b.x - center[0], b.y - center[1], center[2]-b.z) for b in save.blocks]
+    points = np.array(positions)
+
+    projectedPointsList = []
+    sortedBlocksList = []
+
+    for angle in range(0,360,10):
         interPoints = project(points, angle)
         pointIndices = np.flip(np.argsort(interPoints[:, 2]))
         projectedPoints = interPoints[pointIndices]
         sortedBlocks = np.array(save.blocks)[pointIndices]
 
+        projectedPointsList.append(projectedPoints)
+        sortedBlocksList.append(sortedBlocks)
+
+    for i in range(0,36):
+        projectedPoints = projectedPointsList[i]
+
+        angle = i * 10
+        
         tmpBounds = [[projectedPoints[0][0], projectedPoints[0][0]], [projectedPoints[0][1], projectedPoints[0][1]]]
 
         for p in projectedPoints:
@@ -94,16 +133,16 @@ async def render(saveString):
             if p[1] > tmpBounds[1][1]:
                 tmpBounds[1][1] = p[1]
 
-        tmpBounds[0][0] -= 3
-        tmpBounds[0][1] += 3
-        tmpBounds[1][0] -= 3
-        tmpBounds[1][1] += 3
+        tmpBounds[0][0] -= (tmpBounds[0][1] - tmpBounds[0][0])*0.1
+        tmpBounds[0][1] += (tmpBounds[0][1] - tmpBounds[0][0])*0.1
+        tmpBounds[1][0] -= (tmpBounds[1][1] - tmpBounds[1][0])*0.1
+        tmpBounds[1][1] += (tmpBounds[1][1] - tmpBounds[1][0])*0.1
 
         sizeX = tmpBounds[0][1] - tmpBounds[0][0]
         sizeY = tmpBounds[1][1] - tmpBounds[1][0]
 
-        scaleX = int(size[0] / sizeX)
-        scaleY = int(size[1] / sizeY)
+        scaleX = size[0] / sizeX
+        scaleY = size[1] / sizeY
 
         tmpScale = min(scaleX, scaleY)
 
@@ -114,13 +153,16 @@ async def render(saveString):
     sizeX = bounds[0][1] - bounds[0][0]
     sizeY = bounds[1][1] - bounds[1][0]
 
-    scaleX = int(size[0] / sizeX)
-    scaleY = int(size[1] / sizeY)
+    scaleX = size[0] / sizeX
+    scaleY = size[1] / sizeY
 
     frames = []
 
-    for t in range(0,195,15):
-        angle = math.cos(math.radians(t)) * 22.5 + 45
+    for i in range(0,36):
+        projectedPoints = projectedPointsList[i]
+        sortedBlocks = sortedBlocksList[i]
+
+        angle = i * 10
 
         blockColours = [
             (255, 9, 0),
@@ -142,12 +184,10 @@ async def render(saveString):
         sqrt3 = math.sqrt(3)
         sqrt2 = math.sqrt(2)
 
-        positions = [(b.x, b.y, 0-b.z) for b in save.blocks]
-        points = np.array(positions)
         interPoints = project(points, angle)
         pointIndices = np.flip(np.argsort(interPoints[:, 2]))
         projectedPoints = interPoints[pointIndices]
-        sortedBlocks = np.array(save.blocks)[pointIndices]
+        
 
         cubePoints = np.array([
             [-0.5,-0.5,-0.5],
@@ -170,8 +210,6 @@ async def render(saveString):
             drawBlock(b, p)
     
         frames.append(im)
-
-    frames += reversed(frames)
 
     stream = BytesIO()
     frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=1.5, loop=0)

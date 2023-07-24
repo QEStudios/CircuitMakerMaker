@@ -51,7 +51,7 @@ async def on_message(message):
                 await message.reply(f"Sorry, I can't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
                 return
 
-            renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
+            renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False, slient=True)
             
             renderStart = time.time()
             renderedImage, save = await render(saveString)
@@ -85,7 +85,7 @@ async def on_message(message):
             res.raise_for_status()
             url = res.text.rstrip("\n") + "/raw"
 
-            renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
+            renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False, silent=True)
 
             renderStart = time.time()
             renderedImage, save =  await render(saveString)
@@ -122,7 +122,7 @@ async def on_message(message):
                 res.raise_for_status()
                 url = res.text.rstrip("\n") + "/raw"
 
-                renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
+                renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False, silent=True)
 
                 renderStart = time.time()
                 renderedImage, save = await render(saveString)

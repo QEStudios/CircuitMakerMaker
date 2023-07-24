@@ -33,8 +33,8 @@ async def render(saveString):
             blockColour = blockColours[b.blockId]
         if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
-        x = p[0]*scale + size[0]/2 - bounds[0][0]*scale - sizeX/2*scale
-        y = p[1]*scale + size[1]/2 - bounds[1][0]*scale - sizeY/2*scale
+        x = p[0]*scale + size[0]/2
+        y = p[1]*scale + size[1]/2
         posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
         pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
         sideShades = [0.85, 0.75, 0.6, 0.7]

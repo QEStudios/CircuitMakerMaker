@@ -5,7 +5,6 @@ from io import BytesIO
 from PIL import Image, ImageDraw
 import random
 import asyncio
-from transparentGifWorkaround import save_transparent_gif
 
 
 async def render(saveString):
@@ -195,6 +194,6 @@ async def render(saveString):
         frames.append(im)
 
     stream = BytesIO()
-    save_transparent_gif(images=frames,save_file=stream, durations=1.5)
+    frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=1.5, loop=0)
     stream.seek(0)
     return stream, save

@@ -129,8 +129,8 @@ async def render(saveString):
         sizeX = tmpBounds[0][1] - tmpBounds[0][0]
         sizeY = tmpBounds[1][1] - tmpBounds[1][0]
 
-        scaleX = size[0] / sizeX
-        scaleY = size[1] / sizeY
+        scaleX = min(size[0] / sizeX, size[0]*0.8)
+        scaleY = min(size[1] / sizeY, size[1]*0.8)
 
         tmpScale = min(scaleX, scaleY)
 
@@ -138,11 +138,8 @@ async def render(saveString):
             scale = tmpScale
             bounds = tmpBounds
 
-    sizeX = bounds[0][1] - bounds[0][0]
-    sizeY = bounds[1][1] - bounds[1][0]
-
-    scaleX = size[0] / sizeX
-    scaleY = size[1] / sizeY
+    scaleX = min(size[0] / sizeX, size[0]*0.8)
+    scaleY = min(size[1] / sizeY, size[1]*0.8)
 
     frames = []
 

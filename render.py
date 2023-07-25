@@ -122,17 +122,17 @@ async def render(saveString):
                 tmpBounds[1][1] = p[1]
 
         tmpBounds[0][0] -= (tmpBounds[0][1] - tmpBounds[0][0])*0.1
-        tmpBounds[0][1] -= (tmpBounds[0][1] - tmpBounds[0][0])*0.1
-        tmpBounds[1][0] += (tmpBounds[1][1] - tmpBounds[1][0])*0.1
+        tmpBounds[0][1] += (tmpBounds[0][1] - tmpBounds[0][0])*0.1
+        tmpBounds[1][0] -= (tmpBounds[1][1] - tmpBounds[1][0])*0.1
         tmpBounds[1][1] += (tmpBounds[1][1] - tmpBounds[1][0])*0.1
 
         sizeX = tmpBounds[0][1] - tmpBounds[0][0]
         sizeY = tmpBounds[1][1] - tmpBounds[1][0]
 
-        scaleX = min(size[0] / sizeX, size[0]*0.2)
-        scaleY = min(size[1] / sizeY, size[1]*0.2)
+        scaleX = size[0] / sizeX
+        scaleY = size[1] / sizeY
 
-        tmpScale = min(scaleX, scaleY)
+        tmpScale = min(min(scaleX, scaleY), min(size[0]*0.2, size[1]*0.2))
 
         if scale < tmpScale or scale == -1:
             scale = tmpScale

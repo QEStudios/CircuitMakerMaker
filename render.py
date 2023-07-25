@@ -121,10 +121,10 @@ async def render(saveString):
             if p[1] > tmpBounds[1][1]:
                 tmpBounds[1][1] = p[1]
 
-        tmpBounds[0][0] -= (tmpBounds[0][1] - tmpBounds[0][0])*0.1
-        tmpBounds[0][1] += (tmpBounds[0][1] - tmpBounds[0][0])*0.1
-        tmpBounds[1][0] -= (tmpBounds[1][1] - tmpBounds[1][0])*0.1
-        tmpBounds[1][1] += (tmpBounds[1][1] - tmpBounds[1][0])*0.1
+        tmpBounds[0][0] -= size[0]*0.2
+        tmpBounds[0][1] += size[0]*0.2
+        tmpBounds[1][0] -= size[0]*0.2
+        tmpBounds[1][1] += size[0]*0.2
 
         sizeX = tmpBounds[0][1] - tmpBounds[0][0]
         sizeY = tmpBounds[1][1] - tmpBounds[1][0]

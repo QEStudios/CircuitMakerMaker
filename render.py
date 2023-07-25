@@ -5,7 +5,7 @@ from io import BytesIO
 from PIL import Image, ImageDraw
 import random
 import asyncio
-from transparentGifWorkaround import *
+from transparentGifWorkaround import save_transparent_gif
 
 
 async def render(saveString):

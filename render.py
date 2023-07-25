@@ -134,7 +134,7 @@ async def render(saveString):
 
         tmpScale = min(min(scaleX, scaleY), min(size[0]*0.2, size[1]*0.2))
 
-        if scale < tmpScale or scale == -1:
+        if scale > tmpScale or scale == -1:
             scale = tmpScale
             bounds = tmpBounds
 

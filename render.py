@@ -122,8 +122,8 @@ async def render(saveString):
                 tmpBounds[1][1] = p[1]
 
         tmpBounds[0][0] -= (tmpBounds[0][1] - tmpBounds[0][0])*0.1
-        tmpBounds[0][1] += (tmpBounds[0][1] - tmpBounds[0][0])*0.1
-        tmpBounds[1][0] -= (tmpBounds[1][1] - tmpBounds[1][0])*0.1
+        tmpBounds[0][1] -= (tmpBounds[0][1] - tmpBounds[0][0])*0.1
+        tmpBounds[1][0] += (tmpBounds[1][1] - tmpBounds[1][0])*0.1
         tmpBounds[1][1] += (tmpBounds[1][1] - tmpBounds[1][0])*0.1
 
         sizeX = tmpBounds[0][1] - tmpBounds[0][0]

@@ -139,7 +139,7 @@ async def render(saveString):
             bounds = tmpBounds
 
     scaleX = min(size[0] / sizeX, size[0]*0.2)
-    scaleY = min(size[1] / sizeY, size[1]*0.2)
+    scaleY = min(size[1] / sizeY, size[1]*0.1)
 
     frames = []
 

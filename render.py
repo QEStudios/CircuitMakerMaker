@@ -184,7 +184,7 @@ async def render(saveString):
         ]) * scale
         projectedCube = project(cubePoints, angle % 90)
 
-        im = Image.new("RGBA", (size[0], size[1]), color=(0,0,0,255))
+        im = Image.new("RGBA", (size[0], size[1]), color=(0,0,0,0))
         draw = ImageDraw.Draw(im)
 
         for i in range(len(projectedPoints)):

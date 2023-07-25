@@ -194,6 +194,6 @@ async def render(saveString):
         frames.append(im)
 
     stream = BytesIO()
-    frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=1.5, loop=0)
+    frames[0].save(stream, "GIF", save_all=True, append_images=frames[1:], optimize=True, duration=1.5, loop=0, transparency=0)
     stream.seek(0)
     return stream, save

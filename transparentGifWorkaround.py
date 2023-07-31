@@ -4,7 +4,7 @@ from collections.abc import Collection
 from io import BufferedIOBase
 
 
-def process_image(image: Image) -> Image:
+def process_image(image):
     image_w_palette = image.quantize()
 
     palette = image_w_palette.palette.colors
@@ -21,7 +21,7 @@ def process_image(image: Image) -> Image:
     return image_w_palette
 
 
-def save_transparent_gif(images: Collection[Image], durations: int | Collection[int], save_file: BufferedIOBase):
+def save_transparent_gif(images, durations, save_file):
     first_image, *remaining_images = map(process_image, images)
 
     first_image.save(

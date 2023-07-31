@@ -6,7 +6,7 @@ from functools import partial
 from io import BufferedIOBase
 
 
-def process_image(image: Image, alpha_threshold=0) -> Image:
+def process_image(image, alpha_threshold=0) -> Image:
     image_w_palette = image.convert("P", colors=256-1)
 
     palette_indices = np.frombuffer(bytearray(image_w_palette.tobytes()), "uint8")
@@ -21,7 +21,7 @@ def process_image(image: Image, alpha_threshold=0) -> Image:
     return image_w_palette
 
 
-def save_transparent_gif(images: Collection[Image], durations: int | Collection[int], save_file: BufferedIOBase, alpha_threshold=0):
+def save_transparent_gif(images: Collection[Image], durations, save_file, alpha_threshold=0):
     first_image, *remaining_images = map(
         partial(process_image, alpha_threshold=alpha_threshold),
         images

@@ -8,7 +8,7 @@ import asyncio
 from transparentGifWorkaround import save_transparent_gif
 
 
-async def render(saveString):
+async def render(saveString, messageId):
     def project(points, rot):
         a = math.asin(math.tan(math.radians(30)))
         b = math.radians(rot)
@@ -83,10 +83,6 @@ async def render(saveString):
         center += np.array(b.pos)
 
     center = (center / len(save.blocks)).tolist()
-
-    print(center)
-
-    print((0 - center[0], 0 - center[1], center[2]-0))
 
     positions = [(b.x - center[0], b.y - center[1], center[2]-b.z) for b in save.blocks]
     points = np.array(positions)
@@ -164,9 +160,6 @@ async def render(saveString):
             (25, 71, 84),
         ]
 
-        sqrt3 = math.sqrt(3)
-        sqrt2 = math.sqrt(2)
-
         interPoints = project(points, angle)
         pointIndices = np.flip(np.argsort(interPoints[:, 2]))
         projectedPoints = interPoints[pointIndices]
@@ -194,7 +187,7 @@ async def render(saveString):
     
         frames.append(im)
 
-    stream = BytesIO()
-    save_transparent_gif(images=frames,save_file=stream, durations=1.5)
-    stream.seek(0)
-    return stream, save
+    outputFilename = f"result{messageId}.gif"
+    with open(outputFilename, "wb") as f:
+        save_transparent_gif(images=frames, save_file=f, durations=100)
+    return outputFilename, save

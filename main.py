@@ -54,12 +54,12 @@ async def on_message(message):
             renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
             
             renderStart = time.time()
-            renderedImage, save = await render(saveString)
+            renderedImage, save = await render(saveString, message.id)
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.gif")
             embed = discord.Embed(title="Save info")
-            embed.add_field(name="Blocks", value=str(len(save.blocks)), inline=True)
-            embed.add_field(name="Connections", value="\"ill add this later\" - skm", inline=True)
+            embed.add_field(name="Blocks", value=save.blockCount, inline=True)
+            embed.add_field(name="Connections", value=save.connectionCount, inline=True)
             embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
             embed.add_field(name="Link", value=url)
             embed.set_image(url="attachment://preview.gif")
@@ -69,7 +69,7 @@ async def on_message(message):
 
             await renderingMessage.delete()
             await message.reply("Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
-            renderedImage.close()
+            os.remove(renderedImage)
         except Exception as e:
             await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
     elif re.search(saveRegex, message.content):
@@ -88,12 +88,12 @@ async def on_message(message):
             renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
 
             renderStart = time.time()
-            renderedImage, save =  await render(saveString)
+            renderedImage, save =  await render(saveString, message.id)
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.gif")
             embed = discord.Embed(title="Save info")
-            embed.add_field(name="Blocks", value=str(len(save.blocks)), inline=True)
-            embed.add_field(name="Connections", value="\"ill add this later\" - skm", inline=True)
+            embed.add_field(name="Blocks", value=save.blockCount, inline=True)
+            embed.add_field(name="Connections", value=save.connectionCount, inline=True)
             embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
             embed.add_field(name="Link", value=url)
             embed.set_image(url="attachment://preview.gif")
@@ -103,6 +103,7 @@ async def on_message(message):
 
             await renderingMessage.delete()
             await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
+            os.remove(renderedImage)
         except Exception as e:
             print(f"An error occured while uploading to dpaste: {e}")
             await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
@@ -125,12 +126,12 @@ async def on_message(message):
                 renderingMessage = await message.reply("Rendering save (this may take a while)...", mention_author=False)
 
                 renderStart = time.time()
-                renderedImage, save = await render(saveString)
+                renderedImage, save = await render(saveString, message.id)
                 renderTime = round((time.time() - renderStart) * 1000, 1)
                 previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                 embed = discord.Embed(title="Save info")
-                embed.add_field(name="Blocks", value=str(len(save.blocks)), inline=True)
-                embed.add_field(name="Connections", value="\"ill add this later\" - skm", inline=True)
+                embed.add_field(name="Blocks", value=save.blockCount, inline=True)
+                embed.add_field(name="Connections", value=save.connectionCount, inline=True)
                 embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
                 embed.add_field(name="Link", value=url)
                 embed.set_image(url="attachment://preview.gif")
@@ -140,6 +141,7 @@ async def on_message(message):
 
                 await renderingMessage.delete()
                 await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
+                os.remove(renderedImage)
             except Exception as e:
                 print(f"An error occured while uploading to dpaste: {e}")
                 await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")

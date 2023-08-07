@@ -108,14 +108,15 @@ async def on_message(message):
             print(f"An error occured while uploading to dpaste: {e}")
             await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
     elif len(message.attachments) > 0:
+        file = message.attachments[0]
+        if len(file.size) > maxSize:
+            await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+            return
         fileBytes = await message.attachments[0].read()
         fileString = fileBytes.decode()
         if re.match(saveRegex, fileString):
             totalStart = time.time()
             saveString = fileString
-            if len(saveString) > maxSize:
-                await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
-                return
             headers = {"User-Agent": "Mozilla/5.0"}
             payload = {"lexer": "_text", "format": "url", "content": saveString}
             try:

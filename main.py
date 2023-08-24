@@ -110,7 +110,6 @@ async def on_message(message):
     elif len(message.attachments) > 0:
         file = message.attachments[0]
         if file.size > maxSize:
-            await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
             return
         fileBytes = await message.attachments[0].read()
         fileString = fileBytes.decode()

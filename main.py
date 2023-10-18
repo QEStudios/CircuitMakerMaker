@@ -21,6 +21,8 @@ async def on_ready():
     print(f'Logged in as {bot.user.name}')
     print(f'Bot ID: {bot.user.id}')
     print('-----')
+    game = discord.Game("Circuit Maker 2")
+    await client.change_presence(activity=game)
 
 @bot.event
 async def on_message(message):

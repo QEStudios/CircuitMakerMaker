@@ -22,7 +22,7 @@ async def on_ready():
     print(f'Bot ID: {bot.user.id}')
     print('-----')
     game = discord.Game("Circuit Maker 2")
-    await client.change_presence(activity=game)
+    await bot.change_presence(activity=game)
 
 @bot.event
 async def on_message(message):

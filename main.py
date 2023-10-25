@@ -120,12 +120,12 @@ async def on_message(message):
             saveString = fileString
             headers = {"User-Agent": "Mozilla/5.0"}
             payload = {"lexer": "_text", "format": "url", "content": saveString}
+
+            renderingMessage = await message.reply("Rendering save...", mention_author=False)
             try:
                 res = requests.post("https://dpaste.org/api/", headers=headers, data=payload)
                 res.raise_for_status()
                 url = res.text.rstrip("\n") + "/raw"
-
-                renderingMessage = await message.reply("Rendering save...", mention_author=False)
 
                 renderStart = time.time()
                 renderedImage, save = await render(saveString, message.id)

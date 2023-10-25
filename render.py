@@ -32,8 +32,11 @@ async def render(saveString, messageId):
             blockColour = tuple((np.array(blockColours[b.blockId]) + np.array([64,64,64])).tolist())
         else:
             blockColour = blockColours[b.blockId]
-        if b.blockId == cm2.LED and b.properties and len(b.properties) == 3:
+        if (b.blockId == cm2.LED or b.blockId == cm2.TILE) and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
+        if b.blockId == cm2.LED and b.state == False:
+                blockColour = (blockColour[0], blockColour[1], blockColour[2], 127)
+        
         x = p[0]*scale + size[0]/2
         y = p[1]*scale + size[1]/2
         posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))

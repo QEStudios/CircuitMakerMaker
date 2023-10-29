@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
+import traceback
 import regex as re
 import requests
 import time
@@ -73,6 +74,7 @@ async def on_message(message):
             await message.reply("Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
             os.remove(renderedImage)
         except Exception as e:
+            print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
             await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
     elif re.search(saveRegex, message.content):
         totalStart = time.time()
@@ -107,7 +109,7 @@ async def on_message(message):
             await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
             os.remove(renderedImage)
         except Exception as e:
-            print(f"An error occured while uploading to dpaste: {e}")
+            print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
             await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
     elif len(message.attachments) > 0:
         file = message.attachments[0]
@@ -145,7 +147,7 @@ async def on_message(message):
                 await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
                 os.remove(renderedImage)
             except Exception as e:
-                print(f"An error occured while uploading to dpaste: {e}")
+                print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
                 await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
 
 bot.run(TOKEN)

@@ -7,6 +7,7 @@ import random
 import asyncio
 from transparentGifWorkaround import save_transparent_gif
 
+print(cm2.__version__)
 
 async def render(saveString, messageId):
     def project(points, rot):

@@ -82,12 +82,12 @@ async def render(saveString, messageId):
 
     center = np.array([0,0,0], dtype="float64")
 
-    for b in save.blocks.values():
+    for b in save.blocks:
         center += np.array(b.pos)
 
     center = (center / len(save.blocks)).tolist()
 
-    positions = [(b.x - center[0], b.y - center[1], center[2]-b.z) for b in save.blocks.values()]
+    positions = [(b.x - center[0], b.y - center[1], center[2]-b.z) for b in save.blocks]
     points = np.array(positions)
 
     projectedPointsList = []
@@ -98,7 +98,7 @@ async def render(saveString, messageId):
         interPoints = project(points, angle)
         pointIndices = np.flip(np.argsort(interPoints[:, 2]))
         projectedPoints = interPoints[pointIndices]
-        sortedBlocks = np.array(list(save.blocks.values()))[pointIndices]
+        sortedBlocks = np.array(save.blocks)[pointIndices]
 
         projectedPointsList.append(projectedPoints)
         sortedBlocksList.append(sortedBlocks)

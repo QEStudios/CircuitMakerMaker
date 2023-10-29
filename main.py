@@ -33,14 +33,14 @@ async def on_message(message):
     linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)\/raw|pastebin\.com\/raw\/([-a-zA-Z0-9]*)))"
     saveRegex = (
     # Match all blocks
-    r"^(((\d+,)(\d*,)((-?\d+(\.\d+)?)?,){3}(((\d+(\.\d+)?\+)*(\d+(\.\d+)?)))?);)*((?2)\?)"
+    r"(((\d+,)(\d*,)((-?\d+(\.\d+)?)?,){3}(((\d+(\.\d+)?\+)*(\d+(\.\d+)?)))?);)*((?2)\?)"
     # Match all connections
     r"((([1-9][0-9]*),([1-9][0-9]*)|((([1-9][0-9]*),([1-9][0-9]*);)+"
     r"([1-9][0-9]*),([1-9][0-9]*)))?\?)"
     # Match custom build syntax
     r"((\w+(,(-?\d+(\.\d+)?(\+-?\d+(\.\d+)?)*)*)+)(;(\w+(,(-?\d+(\.\d+)?(\+-?\d+(\.\d+)?)*)*)+))*)*\?"
     # Match sign data
-    r"[0-9a-f]*(;[0-9a-fA-F]*)*$"
+    r"[0-9a-f]*(;[0-9a-fA-F]*)*"
 )
     maxSize = 3000000
     

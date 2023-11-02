@@ -26,13 +26,14 @@ async def on_ready():
     game = discord.Game("Circuit Maker 2")
     await bot.change_presence(activity=game)
 
-@bot.slash_command(guild_ids=[cm2Guild])
+@bot.command(description="Get the UserId for a roblox username.") # this decorator makes a slash command
 async def getuser(ctx, arg):
     userUrl = "https://users.roblox.com/docs/json/v1/usernames/users"
     payload = {"usernames": [arg]}
     res = requests.get(userUrl, data=payload)
     userId = res["data"]["id"]
     await ctx.respond(str(userId))
+
 
 @bot.event
 async def on_message(message):

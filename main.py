@@ -29,7 +29,7 @@ async def on_ready():
 
 @bot.slash_command(description="Get the UserId for a roblox username.") # this decorator makes a slash command
 async def getuser(ctx, arg):
-    userUrl = "https://users.roblox.com/api/v1/usernames/users"
+    userUrl = "https://users.roblox.com/v1/usernames/users"
     payload = {"usernames": [arg]}
     res = requests.post(userUrl, data=payload)
     resJson = res.json()

@@ -17,7 +17,7 @@ TOKEN = os.getenv('TOKEN')
 
 intents = discord.Intents.all()
 
-discord.Bot(intents=intents)
+bot = discord.Bot(intents=intents)
 
 @bot.event
 async def on_ready():
@@ -27,7 +27,7 @@ async def on_ready():
     game = discord.Game("Circuit Maker 2")
     await bot.change_presence(activity=game)
 
-@bot.command(description="Get the UserId for a roblox username.") # this decorator makes a slash command
+@bot.slash_command(description="Get the UserId for a roblox username.") # this decorator makes a slash command
 async def getuser(ctx, arg):
     userUrl = "https://users.roblox.com/docs/json/v1/usernames/users"
     payload = {"usernames": [arg]}

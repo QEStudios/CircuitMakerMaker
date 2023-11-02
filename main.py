@@ -17,7 +17,8 @@ TOKEN = os.getenv('TOKEN')
 
 intents = discord.Intents.all()
 
-bot = commands.Bot(command_prefix='!', intents=intents)
+discord.Bot(intents=intents)
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')

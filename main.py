@@ -32,7 +32,7 @@ async def getuser(ctx, arg):
     userUrl = "https://users.roblox.com/docs/json/v1/usernames/users"
     payload = {"usernames": [arg]}
     res = requests.get(userUrl, data=payload)
-    await ctx.respond(res.text)
+    await ctx.respond(str(payload))
     #resJson = res.json()
     #userId = resJson["data"]["id"]
     #await ctx.respond(str(userId))

@@ -33,8 +33,8 @@ async def getuser(ctx, arg):
     payload = {"usernames": [arg]}
     res = requests.post(userUrl, data=payload)
     resJson = res.json()
-    userId = resJson["data"]["id"]
-    await ctx.respond(res.text, ephemeral=True)
+    userId = resJson["data"][0]["id"]
+    await ctx.respond(str(userId), ephemeral=True)
 
 @bot.event
 async def on_message(message):

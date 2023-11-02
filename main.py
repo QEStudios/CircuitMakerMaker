@@ -25,6 +25,14 @@ async def on_ready():
     game = discord.Game("Circuit Maker 2")
     await bot.change_presence(activity=game)
 
+@bot.command()
+async def getuser(ctx, arg):
+    userUrl = "https://users.roblox.com/docs/json/v1/usernames/users"
+    payload = {"usernames": [arg]}
+    res = requests.get(userUrl, data=payload)
+    userId = res["data"]["id"]
+    await ctx.send(str(userId))
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:

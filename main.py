@@ -32,9 +32,9 @@ async def getuser(ctx, arg):
     userUrl = "https://users.roblox.com/v1/usernames/users"
     payload = {"usernames": [arg]}
     res = requests.post(userUrl, data=payload)
-    resJson = res.json()
-    userId = resJson["data"][0]["id"]
-    await ctx.respond(str(userId), ephemeral=True)
+    #resJson = res.json()
+    #userId = resJson["data"][0]["id"]
+    await ctx.respond(res.text, ephemeral=True)
 
 @bot.event
 async def on_message(message):

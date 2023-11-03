@@ -33,8 +33,9 @@ async def render(saveString, messageId):
             blockColour = blockColours[b.blockId]
         if (b.blockId == cm2.LED or b.blockId == cm2.TILE) and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
+        transparency = 255
         if b.blockId == cm2.LED and b.state == False:
-                blockColour = (blockColour[0], blockColour[1], blockColour[2], 127)
+            transparency = 127
         
         x = p[0]*scale + size[0]/2
         y = p[1]*scale + size[1]/2
@@ -51,13 +52,13 @@ async def render(saveString, messageId):
             pCube[1],
             pCube[0],
             pCube[2],
-            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour[:3]]))
+            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour], transparency))
 
         draw.polygon([
             pCube[2],
             pCube[0],
             pCube[4],
-            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour[:3]]))
+            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour], transparency))
 
         # draw.line([
         #     pCube[0],
@@ -180,7 +181,7 @@ async def render(saveString, messageId):
         ]) * scale
         projectedCube = project(cubePoints, angle % 90)
 
-        im = Image.new("RGB", (size[0], size[1]), color=(0,0,0,0))
+        im = Image.new("RGB", (size[0], size[1]), color=(0,0,0))
         draw = ImageDraw.Draw(im, "RGBA")
 
         for i in range(len(projectedPoints)):

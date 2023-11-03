@@ -50,7 +50,7 @@ async def render(saveString, messageId):
 
     def drawText(text, tl,tr,bl,br):
         textIm = generateText(text)
-        textIm = textIm.rotate((angle//90)*-90)
+        textIm = textIm.rotate((angle//90)*90)
         w,h = textIm.size
 
         pts = np.array([[0,0], [w,0], [w,h], [0,h]])
@@ -118,7 +118,7 @@ async def render(saveString, messageId):
             im.alpha_composite(imMask, (0, 0))
         
         if b.blockId == cm2.TEXT:
-            textIm = drawText("A", pCube[6], pCube[7], pCube[2], pCube[3])
+            textIm = drawText(chr(b.properties[0] or 65), pCube[6], pCube[7], pCube[2], pCube[3])
             im.alpha_composite(textIm, (0,0))
     save = cm2.importSave(saveString, snapToGrid=False)
 

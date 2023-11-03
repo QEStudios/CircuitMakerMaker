@@ -26,6 +26,14 @@ async def render(saveString, messageId):
         projected[:, 1] *= -1
         return projected
 
+    def generateText(text):
+        fnt = ImageFont.truetype('arial.ttf', 72)
+        img = Image.new('1', fnt.getsize(text))
+        mask = [x for x in fnt.getmask(text, mode='1')]
+        img.putdata(mask)
+        img = img.convert('RGBA')
+        return img
+
     def drawBlock(b, p):
         if b.state == True:
             blockColour = tuple((np.array(blockColours[b.blockId]) + np.array([64,64,64])).tolist())
@@ -80,6 +88,9 @@ async def render(saveString, messageId):
 
         if b.blockId == cm2.LED and b.state == False:
             im.alpha_composite(imMask, (0, 0))
+        
+        if b.blockId == cm2.TEXT:
+            im.paste(generateText("A"), (0,0))
 
     save = cm2.importSave(saveString, snapToGrid=False)
 

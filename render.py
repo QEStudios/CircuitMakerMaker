@@ -50,7 +50,7 @@ async def render(saveString, messageId):
 
     def drawText(text, tl,tr,bl,br):
         textIm = generateText(text)
-        w,h = textIm.size
+        w,h = size
 
         pts = np.array([[0,0], [w,0], [w,h], [0,h]])
         dst_pts = np.array([tl, tr, br, bl])

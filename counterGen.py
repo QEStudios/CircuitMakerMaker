@@ -20,6 +20,7 @@ def standard(bits, bounds=None):
         intermediate = save.addBlock(cm2.AND, (-1,0,1))
         resetAnd = save.addBlock(cm2.AND, (-1,0,2))
         save.addConnection(intermediate, resetAnd)
+        save.addConnection(clock,resetAnd)
         maxBinary = format(bounds[1], f"0{bits}b")
         minBinary = format(bounds[0], f"0{bits}b")
 
@@ -32,7 +33,7 @@ def standard(bits, bounds=None):
         
         for i,bit in enumerate(minBinary):
             if bit == "1":
-                flips[bits-i-1].state = True
+                flips[bits-i-1].properties = [2,0]
 
     return save
 

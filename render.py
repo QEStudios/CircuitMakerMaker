@@ -46,7 +46,7 @@ async def render(saveString, messageId):
             pCube[3],
             pCube[2],
             pCube[6],
-            pCube[7]], fill=blockColour)
+            pCube[7]], fill=blockColour + [transparency])
 
         draw.polygon([
             pCube[1],

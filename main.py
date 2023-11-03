@@ -1,8 +1,10 @@
 from render import render
+import generate.clock
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
+import io
 import traceback
 import regex as re
 import requests
@@ -27,14 +29,26 @@ async def on_ready():
     game = discord.Game("Circuit Maker 2")
     await bot.change_presence(activity=game)
 
-@bot.slash_command(description="Get the UserId for a roblox username.") # this decorator makes a slash command
-async def getuser(ctx, arg):
+@bot.slash_command(description="Get the UserId for a roblox username.")
+async def getuser(ctx, username: string):
     userUrl = "https://users.roblox.com/v1/usernames/users"
-    payload = {"usernames": [arg], "excludeBannedUsers": True}
+    payload = {"usernames": [username], "excludeBannedUsers": True}
     res = requests.post(userUrl, json=payload)
     resJson = res.json()
     userId = resJson["data"][0]["id"]
     await ctx.respond(str(userId), ephemeral=True)
+
+def saveToBytes(save):
+    saveString = save.exportSave()
+    file = discord.File(io.BytesIO(saveString.encode()),filename=f"generated.txt")
+
+generateCommand = bot.create_group("generate", "Automatically generate circuits from parameters.")
+
+@generateCommand.command(description="A clock with a given period (ticks per cycle)")
+async def clock(ctx, period: int):
+    save = generate.clock.clock(period)
+    file = saveToBytes(save)
+    await ctx.respond("Here's your generated save!", file=file)
 
 @bot.event
 async def on_message(message):

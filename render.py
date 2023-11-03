@@ -29,8 +29,8 @@ async def render(saveString, messageId):
     def generateText(text):
         fnt = ImageFont.truetype('SourceCodePro-Medium.ttf', 72)
         sizeX,sizeY, offsetX,offsetY = fnt.getmask(text).getbbox()
-        squareSize = max(offsetX-sizeX, offsetY-sizeY)
-        img = Image.new('RGBA', (squareSize,squareSize), (0,255,0,255))
+        squareSize = max(offsetX-sizeX, offsetY-sizeY) * 1.2
+        img = Image.new('RGBA', (squareSize,squareSize), (0,0,0,0))
         thisDraw = ImageDraw.Draw(img)
         thisDraw.text(((squareSize-offsetX-sizeX)/2,(squareSize-offsetY-sizeY)/2), text, (255, 255, 255), font=fnt, anchor="lt")
         return img

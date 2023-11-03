@@ -26,14 +26,15 @@ def standard(bits, bounds=None):
 
         for i,bit in enumerate(maxBinary):
             if bit == "1":
-                save.addConnection(flips[bits-i-1], nand)
-                save.addConnection(flips[bits-i-1], intermediate)
+                save.addConnection(flips[i], nand)
+                save.addConnection(flips[i], intermediate)
             if bit != minBinary[i]:
-                save.addConnection(resetAnd, flips[bits-i-1])
+                save.addConnection(resetAnd, flips[i])
+            save.addConnection(nand, flips[i])
         
         for i,bit in enumerate(minBinary):
             if bit == "1":
-                flips[bits-i-1].properties = [2,0]
+                flips[i].properties = [2,0]
 
     return save
 

@@ -28,8 +28,9 @@ async def render(saveString, messageId):
 
     def generateText(text):
         fnt = ImageFont.truetype('SourceCodePro-Medium.ttf', 72)
+        ascent, descent = fnt.getmetrics()
         size, offset = fnt.font.getsize(text)
-        img = Image.new('RGBA', size)
+        img = Image.new('RGBA', (size[0], ascent - offset[1]))
         draw.text(offset, text, (255, 255, 255), font=fnt)
         return img
 

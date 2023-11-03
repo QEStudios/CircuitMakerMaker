@@ -51,7 +51,6 @@ async def render(saveString, messageId):
     def drawText(text, tl,tr,bl,br):
         textIm = generateText(text)
         w,h = textIm.size
-        textIm.resize(size)
 
         pts = np.array([[0,0], [w,0], [w,h], [0,h]])
         dst_pts = np.array([tl, tr, br, bl])
@@ -118,7 +117,7 @@ async def render(saveString, messageId):
             im.alpha_composite(imMask, (0, 0))
         
         if b.blockId == cm2.TEXT:
-            textIm = drawText("A", pCube[3], pCube[2], pCube[7], pCube[6])
+            textIm = drawText("A", pCube[6], pCube[7], pCube[2], pCube[3])
             im.paste(textIm, (0,0))
     save = cm2.importSave(saveString, snapToGrid=False)
 

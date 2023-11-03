@@ -59,6 +59,7 @@ async def render(saveString, messageId):
 
         textIm = textIm.transform((size[0], size[1]), Image.PERSPECTIVE,
         coeffs, Image.BICUBIC)
+        return textIm
         
     def drawBlock(b, p):
         if b.state == True:
@@ -116,7 +117,8 @@ async def render(saveString, messageId):
             im.alpha_composite(imMask, (0, 0))
         
         if b.blockId == cm2.TEXT:
-            drawText("A", pCube[3], pCube[2], pCube[7], pCube[6])
+            textIm = drawText("A", pCube[3], pCube[2], pCube[7], pCube[6])
+            im.paste(textIm, (0,0))
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (600, 450)

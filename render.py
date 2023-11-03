@@ -30,7 +30,7 @@ async def render(saveString, messageId):
         fnt = ImageFont.truetype('SourceCodePro-Medium.ttf', 72)
         size, offset = fnt.font.getsize(text)
         img = Image.new('RGBA', size)
-        draw.text((0,0), text, (255, 255, 255), font=fnt, anchor="mm")
+        draw.text(offset, text, (255, 255, 255), font=fnt, anchor="la")
         return img
 
     def drawBlock(b, p):

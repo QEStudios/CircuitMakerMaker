@@ -65,7 +65,7 @@ def reverse(bits, bounds=None):
             if bit == "1":
                 save.addConnection(flips[i], nor)
                 save.addConnection(flips[i], intermediate)
-            if bit != minBinary[i]:
+            if bit != maxBinary[i]:
                 save.addConnection(resetNor, flips[i])
             save.addConnection(nor, ands[i])
         

@@ -52,13 +52,13 @@ async def render(saveString, messageId):
         textIm = generateText(text)
         w,h = size
 
-        pts = np.array([[0,0], [w,0], [w,h], [0,h]])
-        dst_pts = np.array([tl, tr, br, bl])
+        # pts = np.array([[0,0], [w,0], [w,h], [0,h]])
+        # dst_pts = np.array([tl, tr, br, bl])
 
-        coeffs = find_coeffs(pts, dst_pts)
+        # coeffs = find_coeffs(pts, dst_pts)
 
-        textIm = textIm.transform(size, Image.PERSPECTIVE,
-        coeffs, Image.BICUBIC)
+        # textIm = textIm.transform(size, Image.PERSPECTIVE,
+        # coeffs, Image.BICUBIC)
         return textIm
         
     def drawBlock(b, p):

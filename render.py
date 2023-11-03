@@ -36,8 +36,10 @@ async def render(saveString, messageId):
         if b.blockId == cm2.LED and b.state == False:
             imMask = Image.new('RGBA', size)
             thisDraw = ImageDraw.Draw(imMask)
+            transparency = [127]
         else:
             thisDraw = draw
+            transparency = []
         
         x = p[0]*scale + size[0]/2
         y = p[1]*scale + size[1]/2
@@ -48,19 +50,19 @@ async def render(saveString, messageId):
             pCube[3],
             pCube[2],
             pCube[6],
-            pCube[7]], fill=blockColour)
+            pCube[7]], fill=tuple(list(blockColour) + transparency))
 
         thisDraw.polygon([
             pCube[1],
             pCube[0],
             pCube[2],
-            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour]))
+            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour] + transparency))
 
         thisDraw.polygon([
             pCube[2],
             pCube[0],
             pCube[4],
-            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour]))
+            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour] + transparency))
 
         # thisDraw.line([
         #     pCube[0],

@@ -62,7 +62,7 @@ def reverse(bits, bounds=None):
         minBinary = format(bounds[0], f"0{bits}b")
 
         for i,bit in enumerate(minBinary):
-            if bit == "1":
+            if bit == "0":
                 save.addConnection(flips[i], nor)
                 save.addConnection(flips[i], intermediate)
             if bit != maxBinary[i]:

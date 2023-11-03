@@ -52,13 +52,13 @@ async def render(saveString, messageId):
             pCube[1],
             pCube[0],
             pCube[2],
-            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour], transparency))
+            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour] + [transparency]))
 
         draw.polygon([
             pCube[2],
             pCube[0],
             pCube[4],
-            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour], transparency))
+            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour] + [transparency]))
 
         # draw.line([
         #     pCube[0],

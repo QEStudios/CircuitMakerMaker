@@ -28,7 +28,7 @@ async def render(saveString, messageId):
 
     def generateText(text):
         fnt = ImageFont.truetype('SourceCodePro-Medium.ttf', 72)
-        img = Image.new('1', fnt.getsize(text))
+        img = Image.new('1', fnt.font.getsize(text))
         mask = [x for x in fnt.getmask(text, mode='1')]
         img.putdata(mask)
         img = img.convert('RGBA')

@@ -30,7 +30,7 @@ async def on_ready():
     await bot.change_presence(activity=game)
 
 @bot.slash_command(description="Get the UserId for a roblox username.")
-async def getuser(ctx, username: string):
+async def getuser(ctx, username: str):
     userUrl = "https://users.roblox.com/v1/usernames/users"
     payload = {"usernames": [username], "excludeBannedUsers": True}
     res = requests.post(userUrl, json=payload)

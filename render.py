@@ -35,14 +35,31 @@ async def render(saveString, messageId):
         thisDraw.text(((squareSize-offsetX-sizeX)/2,(squareSize-offsetY-sizeY)/2), text, (255, 255, 255), font=fnt, anchor="lt")
         return img
 
+    def find_coeffs(pa, pb):
+        matrix = []
+        for p1, p2 in zip(pa, pb):
+            matrix.append([p1[0], p1[1], 1, 0, 0, 0, -p2[0]*p1[0], -p2[0]*p1[1]])
+            matrix.append([0, 0, 0, p1[0], p1[1], 1, -p2[1]*p1[0], -p2[1]*p1[1]])
+
+        A = numpy.matrix(matrix, dtype=numpy.float)
+        B = numpy.array(pb).reshape(8)
+
+        res = numpy.dot(numpy.linalg.inv(A.T * A) * A.T, B)
+        return numpy.array(res).reshape(8)
+
+
     def drawText(text, bl,br,tr,tl):
         textIm = generateText(text)
         w,h = textIm.size
 
         pts = np.array([[0,h], [w,h], [w,0], [0,0]])
         dst_pts = np.array([bl, br, tr, tl])
-        
 
+        coeffs = find_coeffs(pts, dst_pts)
+
+        img = img.transform((new_width, height), Image.AFFINE,
+        (1, m, -xshift if m > 0 else 0, 0, 1, 0), Image.BICUBIC)
+        
     def drawBlock(b, p):
         if b.state == True:
             blockColour = tuple((np.array(blockColours[b.blockId]) + np.array([64,64,64])).tolist())

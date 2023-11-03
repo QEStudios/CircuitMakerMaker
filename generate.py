@@ -17,5 +17,7 @@ def counter(minVal, maxVal, direction):
         return counterGen.both(math.ceil(math.log2(maxVal+1)))
     elif direction == 1:
         return counterGen.standard(math.ceil(math.log2(maxVal+1)), (minVal,maxVal))
+    elif direction == 0:
+        return counterGen.reverse(math.ceil(math.log2(maxVal+1)), (minVal,maxVal))
     else:
         return

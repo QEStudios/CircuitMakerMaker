@@ -9,8 +9,13 @@ def image(im: Image.Image, size):
     im = im.resize(dim)
     pixels = list(im.getdata())
 
-    print(pixels)
-
     save = cm2.Save()
+
+    for y in range(dim[1] - 1, -1, -1):
+            for x in range(dim[0]):
+                pixel_index = y * dim[0] + x
+                if pixel_index < len(pixels):
+                    pixel = pixels[pixel_index]
+                    save.addBlock(cm2.TILE, (x, dim[1] - 1 - y), properties=[pixel[0], pixel[1], pixel[2]])
 
     return save

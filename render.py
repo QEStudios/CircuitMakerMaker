@@ -36,6 +36,8 @@ async def render(saveString, messageId):
         if b.blockId == cm2.LED and b.state == False:
             imMask = Image.new('RGBA', size)
             thisDraw = ImageDraw.Draw(imMask)
+        else:
+            thisDraw = draw
         
         x = p[0]*scale + size[0]/2
         y = p[1]*scale + size[1]/2

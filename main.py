@@ -61,7 +61,7 @@ async def clock(ctx, period: int):
 
 @generateCommand.command(description="A counter that counts up or down within a specific range.")
 @option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])
-async def counter(ctx, minVal: int, maxVal: int, direction: str):
+async def counter(ctx, min: int, max: int, direction: str):
     if direction == "up":
         dir = 1
     elif direction == "down":
@@ -71,7 +71,7 @@ async def counter(ctx, minVal: int, maxVal: int, direction: str):
     else:
         await ctx.respond("Invalid argument for `direction`.", ephemeral=True)
         return
-    save = generate.counter(minVal, maxVal, dir)
+    save = generate.counter(min, max, dir)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 

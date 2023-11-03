@@ -43,7 +43,7 @@ async def on_message(message):
     
     linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)(\/raw)?|pastebin\.com(\/raw)?\/([-a-zA-Z0-9]*)))"
     saveRegex = (
-        "^(?<![\d\w,;?+])" # Blocks
+        "(?<![\d\w,;?+])" # Blocks
         "(?>"
         "  (?<b>"
         "    \d+,"
@@ -75,7 +75,7 @@ async def on_message(message):
         "(" # Sign data
         "  ([0-9a-fA-F]{2})"
         ")*"
-        "(?![\d\w,;?+])$"
+        "(?![\d\w,;?+])"
     )
 
     maxSize = 3000000

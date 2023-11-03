@@ -40,10 +40,10 @@ def both(bits):
     nors = []
     flips = []
     clockUp = save.addBlock(cm2.OR, (bits,0,1))
-    clockDown = save.addBlock(cm2.NOR, (bits,0,2))
+    clockDown = save.addBlock(cm2.NOR, (bits,0,2), state=True)
     for i in range(bits):
         ands.append(save.addBlock(cm2.AND, (i,0,1)))
-        nors.append(save.addBlock(cm2.NOR, (i,0,2)))
+        nors.append(save.addBlock(cm2.NOR, (i,0,2), state=False))
         flips.append(save.addBlock(cm2.FLIPFLOP, (i,0,0)))
         save.addConnection(ands[-1], flips[-1])
         save.addConnection(clockUp, ands[-1])

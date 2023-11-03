@@ -119,7 +119,7 @@ async def render(saveString, messageId):
         
         if b.blockId == cm2.TEXT:
             if b.properties:
-                charCode = b.properties[0]
+                charCode = int(b.properties[0])
             else:
                 charCode = 65
             textIm = drawText(chr(charCode), pCube[6], pCube[7], pCube[2], pCube[3])

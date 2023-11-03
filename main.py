@@ -41,18 +41,43 @@ async def on_message(message):
     if message.author == bot.user:
         return
     
-    linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)\/raw|pastebin\.com\/raw\/([-a-zA-Z0-9]*)))"
-    saveRegex = ( # https://regex101.com/r/pTigOh/1
-    # Match all blocks
-    r"^((^|(?<!^);)((\d+,)(\d*,)((-?\d+(\.\d+)?)?,){3}(((\d+(\.\d+)?\+)*(\d+(\.\d+)?)))?))*\?"
-    # Match all connections
-    r"((([1-9][0-9]*),([1-9][0-9]*)|((([1-9][0-9]*),([1-9][0-9]*);)+"
-    r"([1-9][0-9]*),([1-9][0-9]*)))?\?)"
-    # Match custom build syntax
-    r"((\w+(,(-?\d+(\.\d+)?(\+-?\d+(\.\d+)?)*)*)+)(;(\w+(,(-?\d+(\.\d+)?(\+-?\d+(\.\d+)?)*)*)+))*)*\?"
-    # Match sign data
-    r"[0-9a-fA-F]*(;[0-9a-fA-F]*)*"
-)
+    linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)(\/raw)?|pastebin\.com(\/raw)?\/([-a-zA-Z0-9]*)))"
+    saveRegex = (
+        "^(?<![\d\w,;?+])" # Blocks
+        "(?>"
+        "  (?<b>"
+        "    \d+,"
+        "    [01]?"
+        "    (?>,(?<d>-?\d*\.?\d*)){3}"
+        "    (?>(\+|,)(?&d)(?!,))*"
+        "    ;?"
+        "  )+"
+        "(?<!;)\?"
+        ")"
+
+        "(?>" # Connections
+        "  (?<i>[1-9][0-9]*),"
+        "  (?&i)"
+        "  ;?"
+        ")*"
+        "(?<!;)\?"
+
+        "(?>" # Buildings
+        "  [A-Za-z]+,"
+        "  (?>(?&d),){3}"
+        "  (?>(?&d),){9}"
+        "  (?>[01](?&i),?)*"
+        "  (?<!,)"
+        "  ;?"
+        ")*"
+        "(?<!;)\?"
+
+        "(" # Sign data
+        "  ([0-9a-fA-F]{2})"
+        ")*"
+        "(?![\d\w,;?+])$"
+    )
+
     maxSize = 3000000
 
     messageHasLink = re.search(linkRegex, message.content)
@@ -60,6 +85,11 @@ async def on_message(message):
         totalStart = time.time()
         try:
             url = messageHasLink.group(0)
+            if "/raw" not in url:
+                if "dpaste.org" in url:
+                    url += "/raw"
+                else: # pastebin
+                    url = url.split("com/")[0] + "com/raw/" + url.split("com/")[1]
             saveString = requests.get(url).text
             if len(saveString) > maxSize:
                 await message.reply(f"Sorry, I can't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)

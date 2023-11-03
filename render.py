@@ -189,7 +189,7 @@ async def render(saveString, messageId):
             p = projectedPoints[i]
             drawBlock(b, p)
     
-        im.mode = "RGBA"
+        im.convert("RGBA")
         frames.append(im)
 
     outputFilename = f"result{messageId}.gif"

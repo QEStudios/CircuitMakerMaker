@@ -180,8 +180,8 @@ async def render(saveString, messageId):
         ]) * scale
         projectedCube = project(cubePoints, angle % 90)
 
-        im = Image.new("RGBA", (size[0], size[1]), color=(0,0,0,0))
-        draw = ImageDraw.Draw(im)
+        im = Image.new("RGB", (size[0], size[1]), color=(0,0,0,0))
+        draw = ImageDraw.Draw(im, "RGBA")
 
         for i in range(len(projectedPoints)):
             b = sortedBlocks[i]

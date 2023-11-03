@@ -30,7 +30,7 @@ async def render(saveString, messageId):
         fnt = ImageFont.truetype('SourceCodePro-Medium.ttf', 72)
         size, offset = fnt.font.getsize(text)
         img = Image.new('RGBA', size, (0,0,0,255))
-        thisDraw = ImageDraw.draw(img)
+        thisDraw = ImageDraw.Draw(img)
         thisDraw.text(offset, text, (255, 255, 255), font=fnt)
         return img
 

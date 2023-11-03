@@ -31,7 +31,7 @@ async def render(saveString, messageId):
         sizeX,sizeY, offsetX,offsetY = fnt.getmask(text).getbbox()
         img = Image.new('RGBA', (offsetX-sizeX,offsetY-sizeY), (0,0,0,255))
         thisDraw = ImageDraw.Draw(img)
-        thisDraw.text((0,0), text, (255, 255, 255), font=fnt, anchor="tl")
+        thisDraw.text((0,0), text, (255, 255, 255), font=fnt, anchor="lt")
         return img
 
     def drawBlock(b, p):

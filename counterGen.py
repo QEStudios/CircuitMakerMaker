@@ -30,7 +30,7 @@ def standard(bits, bounds=None):
                 save.addConnection(flips[i], intermediate)
             if bit != minBinary[i]:
                 save.addConnection(resetAnd, flips[i])
-            save.addConnection(nand, flips[i])
+            save.addConnection(nand, ands[i])
         
         for i,bit in enumerate(minBinary):
             if bit == "1":

@@ -102,7 +102,7 @@ async def counter(ctx, min: int, max: int, direction: str):
     description="The size of the longest dimension.",
     min_value=1,
     max_value=1_000,
-    default=1,
+    default=100,
     required=False
 )
 async def image(ctx, image: discord.Attachment, size: int):
@@ -154,7 +154,7 @@ async def on_message(message):
         "(?![\d\w,;?+])"
     )
 
-    maxSize = 3000000
+    maxSize = 500000
 
     messageHasLink = re.search(linkRegex, message.content)
     if messageHasLink:

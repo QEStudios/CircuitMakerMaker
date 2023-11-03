@@ -27,7 +27,7 @@ async def render(saveString, messageId):
         return projected
 
     def generateText(text):
-        fnt = ImageFont.truetype('arial.ttf', 72)
+        fnt = ImageFont.truetype('SourceCodePro-Medium.ttf', 72)
         img = Image.new('1', fnt.getsize(text))
         mask = [x for x in fnt.getmask(text, mode='1')]
         img.putdata(mask)

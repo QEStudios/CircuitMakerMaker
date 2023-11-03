@@ -64,12 +64,12 @@ async def clock(ctx, period: int):
     "min",
     description="Minimum value, the counter will reset to this.",
     min_value=0,
-    max_value=100_000
+    max_value=99_999
 )
 @option(
     "max",
     description="Maximum value, this is the highest number the counter will count to.",
-    min_value=2,
+    min_value=1,
     max_value=100_000
 )
 @option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])

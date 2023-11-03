@@ -33,34 +33,34 @@ async def render(saveString, messageId):
             blockColour = blockColours[b.blockId]
         if (b.blockId == cm2.LED or b.blockId == cm2.TILE) and b.properties and len(b.properties) == 3:
             blockColour = tuple([int(v) for v in b.properties])
-        transparency = 255
         if b.blockId == cm2.LED and b.state == False:
-            transparency = 127
+            imMask = Image.new('RGBA', size)
+            thisDraw = ImageDraw.Draw(imMask)
         
         x = p[0]*scale + size[0]/2
         y = p[1]*scale + size[1]/2
         posArray = np.column_stack((np.repeat(x, 8), np.repeat(y, 8)))
         pCube = [tuple(v) for v in (projectedCube[:, :2] + posArray).tolist()]
         sideShades = [0.85, 0.75, 0.6, 0.7]
-        draw.polygon([
+        thisDraw.polygon([
             pCube[3],
             pCube[2],
             pCube[6],
-            pCube[7]], fill=tuple(list(blockColour) + [transparency]))
+            pCube[7]], fill=blockColour)
 
-        draw.polygon([
+        thisDraw.polygon([
             pCube[1],
             pCube[0],
             pCube[2],
-            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour] + [transparency]))
+            pCube[3]], fill=tuple([int(v*sideShades[(angle//90)%4]) for v in blockColour]))
 
-        draw.polygon([
+        thisDraw.polygon([
             pCube[2],
             pCube[0],
             pCube[4],
-            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour] + [transparency]))
+            pCube[6]], fill=tuple([int(v*sideShades[(angle//90+1)%4]) for v in blockColour]))
 
-        # draw.line([
+        # thisDraw.line([
         #     pCube[0],
         #     pCube[4],
         #     pCube[6],
@@ -70,9 +70,13 @@ async def render(saveString, messageId):
         #     pCube[0],
         #     pCube[2],
         #     pCube[6]], fill=0, width=int(scale/8), joint="curve")
-        # draw.line([
+        # thisDraw.line([
         #     pCube[2],
         #     pCube[3]], fill=0, width=int(scale/8), joint="curve")
+
+        if b.blockId == cm2.LED and b.state == False:
+            im.alpha_composite(imMask, (0, 0))
+
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (600, 450)
@@ -181,15 +185,14 @@ async def render(saveString, messageId):
         ]) * scale
         projectedCube = project(cubePoints, angle % 90)
 
-        im = Image.new("RGB", (size[0], size[1]), color=(0,0,0))
-        draw = ImageDraw.Draw(im, "RGBA")
+        im = Image.new("RGBA", (size[0], size[1]), color=(0,0,0,0))
+        draw = ImageDraw.Draw(im)
 
         for i in range(len(projectedPoints)):
             b = sortedBlocks[i]
             p = projectedPoints[i]
             drawBlock(b, p)
     
-        im = im.convert("RGBA")
         frames.append(im)
 
     outputFilename = f"result{messageId}.gif"

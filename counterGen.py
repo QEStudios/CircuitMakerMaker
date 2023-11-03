@@ -43,7 +43,7 @@ def reverse(bits, bounds=None):
 
     ands = []
     flips = []
-    clock = save.addBlock(cm2.NOR, (bits,0,1))
+    clock = save.addBlock(cm2.NOR, (bits,0,1), state=True)
     for i in range(bits):
         ands.append(save.addBlock(cm2.NOR, (i,0,1)))
         flips.append(save.addBlock(cm2.FLIPFLOP, (i,0,0)))
@@ -53,7 +53,7 @@ def reverse(bits, bounds=None):
             save.addConnection(flips[-1], j)
     
     if bounds:
-        nor = save.addBlock(cm2.NOR, (-1,0,0), state=False)
+        nor = save.addBlock(cm2.NOR, (-1,0,0), state=True)
         intermediate = save.addBlock(cm2.OR, (-1,0,1))
         resetNor = save.addBlock(cm2.NOR, (-1,0,2))
         save.addConnection(intermediate, resetNor)

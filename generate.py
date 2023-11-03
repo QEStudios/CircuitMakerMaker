@@ -25,4 +25,4 @@ def counter(minVal, maxVal, direction):
         return
 
 def image(im, scale):
-    imageGen.image(im, scale)
+    return imageGen.image(im, scale)

@@ -116,7 +116,7 @@ async def on_message(message):
             os.remove(renderedImage)
         except Exception as e:
             print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
-            await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
+            await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}")
     else:
         messageHasSave = re.search(saveRegex, message.content)
         if messageHasSave:
@@ -153,7 +153,7 @@ async def on_message(message):
                 os.remove(renderedImage)
             except Exception as e:
                 print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
-                await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
+                await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}")
         elif len(message.attachments) > 0:
             file = message.attachments[0]
             if file.size > maxSize:
@@ -191,6 +191,6 @@ async def on_message(message):
                     os.remove(renderedImage)
                 except Exception as e:
                     print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
-                    await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}")
+                    await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}")
 
 bot.run(TOKEN)

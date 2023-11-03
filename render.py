@@ -36,6 +36,16 @@ async def render(saveString, messageId):
         thisDraw.text(((squareSize-offsetX-sizeX)/2,(squareSize-offsetY-sizeY)/2), text, (255, 255, 255), font=fnt, anchor="lt")
         return img
 
+    def drawText(text, bl,br,tr,tl):
+        textIm = generateText(text)
+        w,h = textIm.size
+
+        pts = np.array([[0,h], [w,h], [w,0], [0,0]])
+        dst_pts = np.array([bl, br, tr, tl])
+        M = cv2.getPerspectiveTransform(pts, dst_pts)
+        image_size = (output_cv2.shape[1], output_cv2.shape[0])
+        warped = cv2.warpPerspective(image_cv2, M, dsize=image_size)
+
     def drawBlock(b, p):
         if b.state == True:
             blockColour = tuple((np.array(blockColours[b.blockId]) + np.array([64,64,64])).tolist())
@@ -92,14 +102,7 @@ async def render(saveString, messageId):
             im.alpha_composite(imMask, (0, 0))
         
         if b.blockId == cm2.TEXT:
-            textIm = generateText("A"), (0,0)
-
-            pts = np.float32(pts.tolist())
-            dst_pts = np.float32(dst_pts.tolist())
-            M = cv2.getPerspectiveTransform(pts, dst_pts)
-            image_size = (output_cv2.shape[1], output_cv2.shape[0])
-            warped = cv2.warpPerspective(image_cv2, M, dsize=image_size)
-
+            drawText()
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (600, 450)

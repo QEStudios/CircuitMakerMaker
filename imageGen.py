@@ -16,6 +16,6 @@ def image(im: Image.Image, size):
                 pixel_index = y * dim[0] + x
                 if pixel_index < len(pixels):
                     pixel = pixels[pixel_index]
-                    save.addBlock(cm2.TILE, (x, dim[1] - 1 - y), properties=[pixel[0], pixel[1], pixel[2]])
+                    save.addBlock(cm2.TILE, (x, dim[1] - 1 - y, 0), properties=[pixel[0], pixel[1], pixel[2]])
 
     return save

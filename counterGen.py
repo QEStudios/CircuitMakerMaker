@@ -38,7 +38,7 @@ def standard(bits, bounds=None):
 
     return save
 
-def reverse(bits):
+def reverse(bits, bounds=None):
     save = cm2.Save()
 
     ands = []
@@ -51,6 +51,24 @@ def reverse(bits):
         save.addConnection(clock, ands[-1])
         for j in ands[:-1]:
             save.addConnection(flips[-1], j)
+    
+    if bounds:
+        nor = save.addBlock(cm2.NOR, (-1,0,0), state=False)
+        intermediate = save.addBlock(cm2.OR, (-1,0,1))
+        resetNor = save.addBlock(cm2.NOR, (-1,0,2))
+        save.addConnection(intermediate, resetNor)
+        save.addConnection(clock,resetNor)
+        maxBinary = format(bounds[1], f"0{bits}b")
+        minBinary = format(bounds[0], f"0{bits}b")
+
+        for i,bit in enumerate(maxBinary):
+            if bit == "1":
+                save.addConnection(flips[i], nor)
+                save.addConnection(flips[i], intermediate)
+            if bit != minBinary[i]:
+                save.addConnection(resetNor, flips[i])
+            save.addConnection(nor, ands[i])
+            flips[i].properties = [2,0]
 
     return save
 

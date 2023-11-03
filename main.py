@@ -46,7 +46,7 @@ generateCommand = bot.create_group("generate", "Automatically generate circuits 
 @generateCommand.command(description="A clock with a given period (ticks per cycle)")
 async def clock(ctx, period: int):
     if period > 10_000 or period <= 1:
-        await ctx.respond("Invalid argument for `period`. Period must be an integer between 2 and 10,000.", ephemeral=True)
+        await ctx.respond("Invalid argument for `period`: Must be an integer between 2 and 10,000.", ephemeral=True)
         return
     save = generate.clock.clock(period)
     file = saveToBytes(save)

@@ -50,7 +50,7 @@ async def render(saveString, messageId):
 
     def drawText(text, tl,tr,bl,br):
         textIm = generateText(text)
-        textIm.rotate((angle//90)*90)
+        textIm = textIm.rotate((angle//90)*90)
         w,h = textIm.size
 
         pts = np.array([[0,0], [w,0], [w,h], [0,h]])

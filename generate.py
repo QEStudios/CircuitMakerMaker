@@ -1,5 +1,7 @@
 import clockGen
 import counterGen
+import imageGen
+
 import math
 
 def clock(period):
@@ -21,3 +23,6 @@ def counter(minVal, maxVal, direction):
         return counterGen.reverse(math.ceil(math.log2(maxVal+1)), (minVal,maxVal))
     else:
         return
+
+def image(im, scale):
+    imageGen.image(im, scale)

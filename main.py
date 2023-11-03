@@ -11,6 +11,7 @@ import regex as re
 import requests
 import time
 import asyncio
+from PIL import Image
 
 load_dotenv()
 
@@ -87,6 +88,27 @@ async def counter(ctx, min: int, max: int, direction: str):
         await ctx.respond("Invalid argument for `direction`.", ephemeral=True)
         return
     save = generate.counter(min, max, dir)
+    file = saveToBytes(save)
+    await ctx.respond("Here's your generated save!", file=file)
+
+@generateCommand.command(description="Convert an image into a save.")
+@option(
+    "image",
+    discord.Attachment,
+    description="The image to convert."
+)
+@option(
+    "size",
+    description="The size of the longest dimension.",
+    min_value=0.01,
+    max_value=1,
+    default=1,
+    required=False
+)
+async def image(ctx, image: discord.Attachment, size: int):
+    imBytes = await image.read()
+    im = Image.open(io.BytesIO(imBytes))
+    save = generate.image(im, size)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 

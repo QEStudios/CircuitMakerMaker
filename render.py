@@ -35,18 +35,22 @@ async def render(saveString, messageId):
         thisDraw.text(((squareSize-offsetX-sizeX)/2,(squareSize-offsetY-sizeY)/2), text, (255, 255, 255), font=fnt, anchor="lt")
         return img
 
-    def find_coeffs(pa, pb):
-        matrix = []
-        for p1, p2 in zip(pa, pb):
-            matrix.append([p1[0], p1[1], 1, 0, 0, 0, -p2[0]*p1[0], -p2[0]*p1[1]])
-            matrix.append([0, 0, 0, p1[0], p1[1], 1, -p2[1]*p1[0], -p2[1]*p1[1]])
+    def create_perspective_transform_matrix(src, dst):
+        """ Creates a perspective transformation matrix which transforms points
+            in quadrilateral ``src`` to the corresponding points on quadrilateral
+            ``dst``.
 
-        A = np.matrix(matrix, dtype=float)
-        B = np.array(pb).reshape(8)
-
-        res = np.dot(np.linalg.inv(A.T * A) * A.T, B)
-        return np.array(res).reshape(8)
-
+            Will raise a ``np.linalg.LinAlgError`` on invalid input.
+            """
+        # See:
+        # * http://xenia.media.mit.edu/~cwren/interpolator/
+        # * http://stackoverflow.com/a/14178717/71522
+        in_matrix = []
+        for (x, y), (X, Y) in zip(src, dst):
+            in_matrix.extend([
+                [x, y, 1, 0, 0, 0, -X * x, -X * y],
+                [0, 0, 0, x, y, 1, -Y * x, -Y * y],
+            ])
 
     def drawText(text, tl,tr,bl,br):
         textIm = generateText(text)
@@ -55,10 +59,10 @@ async def render(saveString, messageId):
         pts = np.array([[0,0], [w,0], [w,h], [0,h]])
         dst_pts = np.array([tl, tr, br, bl])
 
-        coeffs = find_coeffs(pts, dst_pts)
+        matrix = create_perspective_transform_matrix(pts, dst_pts)
 
         textIm = textIm.transform(size, Image.PERSPECTIVE,
-        coeffs, Image.BICUBIC)
+        matrix, Image.BICUBIC)
         return textIm
         
     def drawBlock(b, p):

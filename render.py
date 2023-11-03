@@ -48,17 +48,17 @@ async def render(saveString, messageId):
         return numpy.array(res).reshape(8)
 
 
-    def drawText(text, bl,br,tr,tl):
+    def drawText(text, tl,tr,bl,br):
         textIm = generateText(text)
         w,h = textIm.size
 
-        pts = np.array([[0,h], [w,h], [w,0], [0,0]])
-        dst_pts = np.array([bl, br, tr, tl])
+        pts = np.array([[0,0], [w,0], [w,h], [0,h]])
+        dst_pts = np.array([tl, tr, br, bl])
 
         coeffs = find_coeffs(pts, dst_pts)
 
-        img = img.transform((new_width, height), Image.AFFINE,
-        (1, m, -xshift if m > 0 else 0, 0, 1, 0), Image.BICUBIC)
+        textIm = textIm.transform((size[0], size[1]), Image.PERSPECTIVE,
+        coeffs, Image.BICUBIC)
         
     def drawBlock(b, p):
         if b.state == True:
@@ -116,7 +116,7 @@ async def render(saveString, messageId):
             im.alpha_composite(imMask, (0, 0))
         
         if b.blockId == cm2.TEXT:
-            drawText()
+            drawText("A", pCube[3], pCube[2], pCube[7], pCube[6])
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (600, 450)

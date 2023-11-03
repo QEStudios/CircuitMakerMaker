@@ -35,9 +35,3 @@ def cycle(period):
         save.addConnection(andBlock, blocks[1])
     
     return save
-
-def clock(period):
-    if period <= 5:
-        return chain(period)
-    else:
-        return cycle(period)

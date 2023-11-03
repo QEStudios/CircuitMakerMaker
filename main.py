@@ -1,6 +1,7 @@
 from render import render
-import generate.clock
+import generate
 import discord
+from discord import option
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
@@ -43,12 +44,34 @@ def saveToBytes(save):
 
 generateCommand = bot.create_group("generate", "Automatically generate circuits from parameters.")
 
-@generateCommand.command(description="A clock with a given period (ticks per cycle)")
+@generateCommand.command(description="A clock with a given period.")
+@option(
+    "period",
+    description="The period of the clock, in ticks/cycle.",
+    min_value=2,
+    max_value=10_000
+)
 async def clock(ctx, period: int):
     if period > 10_000 or period <= 1:
         await ctx.respond("Invalid argument for `period`: Must be an integer between 2 and 10,000.", ephemeral=True)
         return
-    save = generate.clock.clock(period)
+    save = generate.clock(period)
+    file = saveToBytes(save)
+    await ctx.respond("Here's your generated save!", file=file)
+
+@generateCommand.command(description="A counter that counts up or down within a specific range.")
+@option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])
+async def counter(ctx, minVal: int, maxVal: int, direction: str):
+    if direction == "up":
+        dir = 1
+    elif direction == "down":
+        dir = -1
+    elif direction == "up/down":
+        dir = 0
+    else:
+        await ctx.respond("Invalid argument for `direction`.", ephemeral=True)
+        return
+    save = generate.counter(minVal, maxVal, dir)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 

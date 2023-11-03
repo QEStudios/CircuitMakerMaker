@@ -100,8 +100,8 @@ async def counter(ctx, min: int, max: int, direction: str):
 @option(
     "size",
     description="The size of the longest dimension.",
-    min_value=0.01,
-    max_value=1,
+    min_value=1,
+    max_value=1_000,
     default=1,
     required=False
 )

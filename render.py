@@ -1,6 +1,7 @@
 import cm2py as cm2
 import numpy as np
 import math
+import cv2
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -91,7 +92,13 @@ async def render(saveString, messageId):
             im.alpha_composite(imMask, (0, 0))
         
         if b.blockId == cm2.TEXT:
-            im.paste(generateText("A"), (0,0))
+            textIm = generateText("A"), (0,0)
+
+            pts = np.float32(pts.tolist())
+            dst_pts = np.float32(dst_pts.tolist())
+            M = cv2.getPerspectiveTransform(pts, dst_pts)
+            image_size = (output_cv2.shape[1], output_cv2.shape[0])
+            warped = cv2.warpPerspective(image_cv2, M, dsize=image_size)
 
     save = cm2.importSave(saveString, snapToGrid=False)
 

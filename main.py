@@ -11,8 +11,6 @@ import requests
 import time
 import asyncio
 
-cm2Guild=956406294263242792
-
 load_dotenv()
 
 TOKEN = os.getenv('TOKEN')
@@ -41,6 +39,7 @@ async def getuser(ctx, username: str):
 def saveToBytes(save):
     saveString = save.exportSave()
     file = discord.File(io.BytesIO(saveString.encode()),filename=f"generated.txt")
+    return file
 
 generateCommand = bot.create_group("generate", "Automatically generate circuits from parameters.")
 

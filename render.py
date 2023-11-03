@@ -118,7 +118,7 @@ async def render(saveString, messageId):
         
         if b.blockId == cm2.TEXT:
             textIm = drawText("A", pCube[3], pCube[2], pCube[7], pCube[6])
-            im.paste(textIm, (0,0))
+            im.alpha_composite(textIm, (0,0))
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (600, 450)

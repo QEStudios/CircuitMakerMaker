@@ -13,7 +13,7 @@ def counter(minVal, maxVal, direction):
         return counterGen.standard(int(math.log2(maxVal+1)))
     elif minVal == 0 and (math.log2(maxVal+1))%1 == 0 and direction == -1:
         return counterGen.reverse(int(math.log2(maxVal+1)))
-    elif minVal == 0 and (math.log2(maxVal+1))%1 == 0 and direction == -1:
+    elif minVal == 0 and (math.log2(maxVal+1))%1 == 0 and direction == 0:
         return counterGen.both(int(math.log2(maxVal+1)))
     else:
         return

@@ -68,7 +68,7 @@ async def clock(ctx, period: int):
 )
 @option(
     "max",
-    description="Maximum value, this is the highest number the counter will count to",
+    description="Maximum value, this is the highest number the counter will count to.",
     min_value=2,
     max_value=100_000
 )

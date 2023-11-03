@@ -74,6 +74,9 @@ async def clock(ctx, period: int):
 )
 @option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])
 async def counter(ctx, min: int, max: int, direction: str):
+    if min >= max:
+        await ctx.respond("Invalid arguments: `max` must be greater than `min`.", ephemeral=True)
+        return
     if direction == "up":
         dir = 1
     elif direction == "down":

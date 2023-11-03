@@ -1,7 +1,7 @@
 import cm2py as cm2
 import math
 
-def standard(bits):
+def standard(bits, bounds=None):
     save = cm2.Save()
 
     ands = []
@@ -14,6 +14,25 @@ def standard(bits):
         save.addConnection(clock, ands[-1])
         for j in ands[:-1]:
             save.addConnection(flips[-1], j)
+    
+    if bounds:
+        nand = save.addBlock(cm2.NAND, (-1,0,0), state=True)
+        intermediate = save.addBlock(cm2.AND, (-1,0,1))
+        resetAnd = save.addBlock(cm2.AND, (-1,0,2))
+        save.addConnection(intermediate, resetAnd)
+        maxBinary = format(max, f"0{bits}b")
+        minBinary = format(min, f"0{bits}b")
+
+        for i,bit in enumerate(maxBinary):
+            if bit == "1":
+                save.addConnection(flips[bits-i-1], nand)
+                save.addConnection(flips[bits-i-1], intermediate)
+            if bit != minBinary[i]:
+                save.addConnection(resetAnd, flips[bits-i-1])
+        
+        for i,bit in enumerate(minBinary):
+            if bit == "1":
+                flips[bits-i-1].state = True
 
     return save
 

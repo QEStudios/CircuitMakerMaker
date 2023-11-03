@@ -43,8 +43,7 @@ async def render(saveString, messageId):
         pts = np.array([[0,h], [w,h], [w,0], [0,0]])
         dst_pts = np.array([bl, br, tr, tl])
         M = cv2.getPerspectiveTransform(pts, dst_pts)
-        image_size = (output_cv2.shape[1], output_cv2.shape[0])
-        warped = cv2.warpPerspective(image_cv2, M, dsize=image_size)
+        print(str(M))
 
     def drawBlock(b, p):
         if b.state == True:

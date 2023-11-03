@@ -1,7 +1,6 @@
 import cm2py as cm2
 import numpy as np
 import math
-import cv2
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -42,8 +41,7 @@ async def render(saveString, messageId):
 
         pts = np.array([[0,h], [w,h], [w,0], [0,0]])
         dst_pts = np.array([bl, br, tr, tl])
-        M = cv2.getPerspectiveTransform(pts, dst_pts)
-        print(str(M))
+        
 
     def drawBlock(b, p):
         if b.state == True:

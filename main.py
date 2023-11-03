@@ -60,6 +60,18 @@ async def clock(ctx, period: int):
     await ctx.respond("Here's your generated save!", file=file)
 
 @generateCommand.command(description="A counter that counts up or down within a specific range.")
+@option(
+    "min",
+    description="Minimum value, the counter will reset to this.",
+    min_value=0,
+    max_value=100_000
+)
+@option(
+    "max",
+    description="Maximum value, this is the highest number the counter will count to",
+    min_value=2,
+    max_value=100_000
+)
 @option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])
 async def counter(ctx, min: int, max: int, direction: str):
     if direction == "up":

@@ -20,8 +20,8 @@ def standard(bits, bounds=None):
         intermediate = save.addBlock(cm2.AND, (-1,0,1))
         resetAnd = save.addBlock(cm2.AND, (-1,0,2))
         save.addConnection(intermediate, resetAnd)
-        maxBinary = "{:0{width}b}".format(max, width=bits)
-        minBinary = "{:0{width}b}".format(min, width=bits)
+        maxBinary = format(bounds[1], f"0{bits}b")
+        minBinary = format(bounds[0], f"0{bits}b")
 
         for i,bit in enumerate(maxBinary):
             if bit == "1":

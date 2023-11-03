@@ -2,7 +2,7 @@ import cm2py as cm2
 import numpy as np
 import math
 from io import BytesIO
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 import random
 import asyncio
 from transparentGifWorkaround import save_transparent_gif

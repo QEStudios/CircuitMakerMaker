@@ -174,7 +174,8 @@ async def on_message(message):
             renderingMessage = await message.reply("Rendering save...", mention_author=False)
             
             renderStart = time.time()
-            renderedImage, save = await render(saveString, message.id)
+            renderTask = asyncio.create_task(render(saveString, message.id))
+            renderedImage, save = await renderTask
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.gif")
             embed = discord.Embed(title="Save info")
@@ -211,7 +212,8 @@ async def on_message(message):
                 renderingMessage = await message.reply("Rendering save...", mention_author=False)
     
                 renderStart = time.time()
-                renderedImage, save =  await render(saveString, message.id)
+                renderTask = asyncio.create_task(render(saveString, message.id))
+                renderedImage, save = await renderTask
                 renderTime = round((time.time() - renderStart) * 1000, 1)
                 previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                 embed = discord.Embed(title="Save info")
@@ -249,7 +251,8 @@ async def on_message(message):
                     url = res.text.rstrip("\n") + "/raw"
     
                     renderStart = time.time()
-                    renderedImage, save = await render(saveString, message.id)
+                    renderTask = asyncio.create_task(render(saveString, message.id))
+                    renderedImage, save = await renderTask
                     renderTime = round((time.time() - renderStart) * 1000, 1)
                     previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                     embed = discord.Embed(title="Save info")

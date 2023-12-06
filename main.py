@@ -118,6 +118,7 @@ async def image(ctx, image: discord.Attachment, size: int):
 
 @bot.event
 async def on_message(message):
+    totalStart = time.time()
     if message.author == bot.user:
         return
     
@@ -162,7 +163,6 @@ async def on_message(message):
 
     messageHasLink = re.search(linkRegex, message.content)
     if messageHasLink:
-        totalStart = time.time()
         try:
             url = messageHasLink.group(0)
             if "/raw" not in url:
@@ -201,7 +201,6 @@ async def on_message(message):
     else:
         messageHasSave = re.search(saveRegex, message.content)
         if messageHasSave:
-            totalStart = time.time()
             saveString = messageHasSave.group(0)
             if len(saveString) > maxSize:
                 await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
@@ -243,7 +242,6 @@ async def on_message(message):
             fileBytes = await message.attachments[0].read()
             fileString = fileBytes.decode()
             if re.match(saveRegex, fileString):
-                totalStart = time.time()
                 saveString = fileString
                 headers = {"User-Agent": "Mozilla/5.0"}
                 payload = {"lexer": "_text", "format": "url", "content": saveString}

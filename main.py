@@ -106,7 +106,7 @@ async def counter(ctx, min: int, max: int, direction: str):
     required=False
 )
 async def image(ctx, image: discord.Attachment, size: int):
-    ctx.defer()
+    await ctx.defer()
     imBytes = await image.read()
     im = Image.open(io.BytesIO(imBytes))
     save = generate.image(im, size)

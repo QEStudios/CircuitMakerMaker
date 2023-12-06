@@ -126,7 +126,7 @@ async def render(saveString, messageId):
             im.alpha_composite(textIm, (0,0))
     save = cm2.importSave(saveString, snapToGrid=False)
 
-    size = (600, 450)
+    size = (300, 225)
 
     scale = -1
     bounds = []

@@ -31,6 +31,7 @@ async def on_ready():
 
 @bot.slash_command(description="Get the UserId for a roblox username.")
 async def getuser(ctx, username: str):
+    await ctx.defer()
     userUrl = "https://users.roblox.com/v1/usernames/users"
     payload = {"usernames": [username], "excludeBannedUsers": True}
     res = requests.post(userUrl, json=payload)
@@ -53,6 +54,7 @@ generateCommand = bot.create_group("generate", "Automatically generate circuits 
     max_value=10_000
 )
 async def clock(ctx, period: int):
+    await ctx.defer()
     if period > 10_000 or period <= 1:
         await ctx.respond("Invalid argument for `period`: Must be an integer between 2 and 10,000.", ephemeral=True)
         return
@@ -75,6 +77,7 @@ async def clock(ctx, period: int):
 )
 @option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])
 async def counter(ctx, min: int, max: int, direction: str):
+    await ctx.defer()
     if min >= max:
         await ctx.respond("Invalid arguments: `max` must be greater than `min`.", ephemeral=True)
         return

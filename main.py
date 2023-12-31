@@ -94,27 +94,27 @@ async def counter(ctx, min: int, max: int, direction: str):
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 
-@generateCommand.command(description="Convert an image into a save.")
-@option(
-    "image",
-    discord.Attachment,
-    description="The image to convert."
-)
-@option(
-    "size",
-    description="The size of the longest dimension.",
-    min_value=1,
-    max_value=1_000,
-    default=100,
-    required=False
-)
-async def image(ctx, image: discord.Attachment, size: int):
-    await ctx.defer()
-    imBytes = await image.read()
-    im = Image.open(io.BytesIO(imBytes))
-    save = generate.image(im, size)
-    file = saveToBytes(save)
-    await ctx.respond("Here's your generated save!", file=file)
+# @generateCommand.command(description="Convert an image into a save.")
+# @option(
+#     "image",
+#     discord.Attachment,
+#     description="The image to convert."
+# )
+# @option(
+#     "size",
+#     description="The size of the longest dimension.",
+#     min_value=1,
+#     max_value=1_000,
+#     default=100,
+#     required=False
+# )
+# async def image(ctx, image: discord.Attachment, size: int):
+#     await ctx.defer()
+#     imBytes = await image.read()
+#     im = Image.open(io.BytesIO(imBytes))
+#     save = generate.image(im, size)
+#     file = saveToBytes(save)
+#     await ctx.respond("Here's your generated save!", file=file)
 
 @bot.event
 async def on_message(message):

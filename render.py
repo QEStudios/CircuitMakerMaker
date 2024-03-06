@@ -8,6 +8,8 @@ import random
 import asyncio
 from transparentGifWorkaround import save_transparent_gif
 
+MAX_TIME = 5
+
 async def render(saveString, messageId):
     def project(points, rot):
         a = math.asin(math.tan(math.radians(30)))
@@ -243,7 +245,8 @@ async def render(saveString, messageId):
             p = projectedPoints[i]
             drawBlock(b, p)
 
-            
+            if time.time() - startTime >= MAX_TIME:
+                return False
     
         frames.append(im)
 

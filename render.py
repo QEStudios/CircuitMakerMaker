@@ -1,6 +1,7 @@
 import cm2py as cm2
 import numpy as np
 import math
+import time
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 import random
@@ -191,6 +192,8 @@ async def render(saveString, messageId):
 
     frames = []
 
+    startTime = time.time()
+
     for i in range(0,36):
         projectedPoints = projectedPointsList[i]
         sortedBlocks = sortedBlocksList[i]
@@ -239,10 +242,12 @@ async def render(saveString, messageId):
             b = sortedBlocks[i]
             p = projectedPoints[i]
             drawBlock(b, p)
+
+            
     
         frames.append(im)
 
     outputFilename = f"result{messageId}.gif"
     with open(outputFilename, "wb") as f:
         save_transparent_gif(images=frames, save_file=f, durations=100)
-    return outputFilename, save
+    return True, outputFilename, save

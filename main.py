@@ -179,7 +179,10 @@ async def on_message(message):
             
             renderStart = time.time()
             renderTask = asyncio.create_task(render(saveString, message.id))
-            renderedImage, save = await renderTask
+            success, renderedImage, save = await renderTask
+            if not success:
+                await message.reply(f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds.")
+                return
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.gif")
             embed = discord.Embed(title="Save info")
@@ -216,7 +219,10 @@ async def on_message(message):
     
                 renderStart = time.time()
                 renderTask = asyncio.create_task(render(saveString, message.id))
-                renderedImage, save = await renderTask
+                success, renderedImage, save = await renderTask
+                if not success:
+                    await message.reply(f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds.")
+                    return
                 renderTime = round((time.time() - renderStart) * 1000, 1)
                 previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                 embed = discord.Embed(title="Save info")
@@ -254,7 +260,10 @@ async def on_message(message):
     
                     renderStart = time.time()
                     renderTask = asyncio.create_task(render(saveString, message.id))
-                    renderedImage, save = await renderTask
+                    success, renderedImage, save = await renderTask
+                    if not success:
+                        await message.reply(f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds.")
+                        return
                     renderTime = round((time.time() - renderStart) * 1000, 1)
                     previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                     embed = discord.Embed(title="Save info")

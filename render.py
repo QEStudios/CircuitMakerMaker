@@ -8,7 +8,7 @@ import random
 import asyncio
 from transparentGifWorkaround import save_transparent_gif
 
-MAX_TIME = 5
+MAX_TIME = 120
 
 async def render(saveString, messageId):
     def project(points, rot):
@@ -127,6 +127,9 @@ async def render(saveString, messageId):
         #         charCode = 65
         #     textIm = drawText(chr(charCode), pCube[6], pCube[7], pCube[2], pCube[3])
         #     im.alpha_composite(textIm, (0,0))
+
+    startTime = time.time()
+
     save = cm2.importSave(saveString, snapToGrid=False)
 
     size = (600, 450)
@@ -193,8 +196,6 @@ async def render(saveString, messageId):
             bounds = tmpBounds
 
     frames = []
-
-    startTime = time.time()
 
     for i in range(0,36):
         projectedPoints = projectedPointsList[i]

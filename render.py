@@ -246,7 +246,7 @@ async def render(saveString, messageId):
             drawBlock(b, p)
 
             if time.time() - startTime >= MAX_TIME:
-                return False
+                return False, None, None
     
         frames.append(im)
 

@@ -1,0 +1,6 @@
+requests
+cm2py
+numpy
+pillow
+py-cord
+python-dotenv

@@ -156,7 +156,7 @@ async def on_message(message):
         or attachment.content_type.startswith("video/")
         for attachment in message.attachments
     ):
-        await message.reply("literally me", mention_author=False)
+        await message.reply("literally me")
         return
 
     linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)(\/raw)?|pastebin\.com(\/raw)?\/([-a-zA-Z0-9]*)))"

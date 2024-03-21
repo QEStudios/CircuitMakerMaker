@@ -140,14 +140,17 @@ async def on_message(message):
         return
 
     if (
-        ((str(message.author.id) == "844957879714840597"
-        and str(message.channel.id) == "1187662902610636910"
-        and str(message.guild.id) == "956406294263242792")
-        or (str(message.author.id) == "665724183094755359"
-        and str(message.channel.id) == "869012824620417075"
-        and str(message.guild.id) == "1220285303479337031"))
-        and len(message.attachments) > 0
-    ):
+        (
+            str(message.author.id) == "844957879714840597"
+            and str(message.channel.id) == "1187662902610636910"
+            and str(message.guild.id) == "956406294263242792"
+        )
+        or (
+            str(message.author.id) == "665724183094755359"
+            and str(message.channel.id) == "1220285303479337031"
+            and str(message.guild.id) == "869012824620417075"
+        )
+    ) and len(message.attachments) > 0:
         await message.reply("literally me", mention_author=False)
         return
 

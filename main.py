@@ -15,19 +15,21 @@ from PIL import Image
 
 load_dotenv()
 
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv("TOKEN")
 
 intents = discord.Intents.all()
 
 bot = discord.Bot(intents=intents)
 
+
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user.name}')
-    print(f'Bot ID: {bot.user.id}')
-    print('-----')
+    print(f"Logged in as {bot.user.name}")
+    print(f"Bot ID: {bot.user.id}")
+    print("-----")
     game = discord.Game("Circuit Maker 2")
     await bot.change_presence(activity=game)
+
 
 @bot.slash_command(description="Get the UserId for a roblox username.")
 async def getuser(ctx, username: str):
@@ -39,47 +41,64 @@ async def getuser(ctx, username: str):
     userId = resJson["data"][0]["id"]
     await ctx.respond(str(userId), ephemeral=True)
 
+
 def saveToBytes(save):
     saveString = save.exportSave()
-    file = discord.File(io.BytesIO(saveString.encode()),filename=f"generated.txt")
+    file = discord.File(io.BytesIO(saveString.encode()), filename=f"generated.txt")
     return file
 
-generateCommand = bot.create_group("generate", "Automatically generate circuits from parameters.")
+
+generateCommand = bot.create_group(
+    "generate", "Automatically generate circuits from parameters."
+)
+
 
 @generateCommand.command(description="A clock with a given period.")
 @option(
     "period",
     description="The period of the clock, in ticks/cycle.",
     min_value=2,
-    max_value=10_000
+    max_value=10_000,
 )
 async def clock(ctx, period: int):
     await ctx.defer()
     if period > 10_000 or period <= 1:
-        await ctx.respond("Invalid argument for `period`: Must be an integer between 2 and 10,000.", ephemeral=True)
+        await ctx.respond(
+            "Invalid argument for `period`: Must be an integer between 2 and 10,000.",
+            ephemeral=True,
+        )
         return
     save = generate.clock(period)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 
-@generateCommand.command(description="A counter that counts up or down within a specific range.")
+
+@generateCommand.command(
+    description="A counter that counts up or down within a specific range."
+)
 @option(
     "min",
     description="Minimum value, the counter will reset to this.",
     min_value=0,
-    max_value=99_999
+    max_value=99_999,
 )
 @option(
     "max",
     description="Maximum value, this is the highest number the counter will count to.",
     min_value=1,
-    max_value=100_000
+    max_value=100_000,
 )
-@option("direction", description="Whether to count up or down, or both.", choices=["up", "down", "up/down"])
+@option(
+    "direction",
+    description="Whether to count up or down, or both.",
+    choices=["up", "down", "up/down"],
+)
 async def counter(ctx, min: int, max: int, direction: str):
     await ctx.defer()
     if min >= max:
-        await ctx.respond("Invalid arguments: `max` must be greater than `min`.", ephemeral=True)
+        await ctx.respond(
+            "Invalid arguments: `max` must be greater than `min`.", ephemeral=True
+        )
         return
     if direction == "up":
         dir = 1
@@ -94,19 +113,16 @@ async def counter(ctx, min: int, max: int, direction: str):
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 
+
 @generateCommand.command(description="Convert an image into a save.")
-@option(
-    "image",
-    discord.Attachment,
-    description="The image to convert."
-)
+@option("image", discord.Attachment, description="The image to convert.")
 @option(
     "size",
     description="The size of the longest dimension.",
     min_value=1,
     max_value=1_000,
     default=100,
-    required=False
+    required=False,
 )
 async def image(ctx, image: discord.Attachment, size: int):
     await ctx.defer()
@@ -116,45 +132,52 @@ async def image(ctx, image: discord.Attachment, size: int):
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 
+
 @bot.event
 async def on_message(message):
     totalStart = time.time()
     if message.author == bot.user:
         return
-    
+
+    if (
+        str(message.author.id) == 844957879714840597
+        and str(message.channel.id) == 1187662902610636910
+        and str(message.guild.id) == 956406294263242792
+        and len(message.attachments) > 0
+    ):
+        await message.reply("literally me", mention_author=False)
+        return
+
     linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)(\/raw)?|pastebin\.com(\/raw)?\/([-a-zA-Z0-9]*)))"
     saveRegex = (
-        "(?<![\d\w,;?+])" # Blocks
+        "(?<![\d\w,;?+])"  # Blocks
         "(?>"
-          "(?<b>"
-            "\d+,"
-            "[01]?"
-            "(?>,(?<d>-?\d*\.?\d*)){3}"
-            "(?>(\+|,)(?&d)(?!,))*"
-            ";?"
-          ")+"
+        "(?<b>"
+        "\d+,"
+        "[01]?"
+        "(?>,(?<d>-?\d*\.?\d*)){3}"
+        "(?>(\+|,)(?&d)(?!,))*"
+        ";?"
+        ")+"
         "(?<!;)\?"
         ")"
-
-        "(?>" # Connections
-          "(?<i>[1-9][0-9]*),"
-          "(?&i)"
-          ";?"
+        "(?>"  # Connections
+        "(?<i>[1-9][0-9]*),"
+        "(?&i)"
+        ";?"
         ")*"
         "(?<!;)\?"
-
-        "(?>" # Buildings
-          "[A-Za-z]+,"
-          "(?>(?&d),){3}"
-          "(?>(?&d),){9}"
-          "(?>[01](?&i),?)*"
-          "(?<!,)"
-          ";?"
+        "(?>"  # Buildings
+        "[A-Za-z]+,"
+        "(?>(?&d),){3}"
+        "(?>(?&d),){9}"
+        "(?>[01](?&i),?)*"
+        "(?<!,)"
+        ";?"
         ")*"
         "(?<!;)\?"
-
-        "(" # Sign data
-          "([0-9a-fA-F]{2})"
+        "("  # Sign data
+        "([0-9a-fA-F]{2})"
         ")*"
         "(?![\d\w,;?+])"
     )
@@ -168,20 +191,27 @@ async def on_message(message):
             if "/raw" not in url:
                 if "dpaste.org" in url:
                     url += "/raw"
-                else: # pastebin
+                else:  # pastebin
                     url = url.split("com/")[0] + "com/raw/" + url.split("com/")[1]
             saveString = requests.get(url).text
             if len(saveString) > maxSize:
-                await message.reply(f"Sorry, I can't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+                await message.reply(
+                    f"Sorry, I can't render a preview for that save, it's over {maxSize//1000} KiB!",
+                    mention_author=False,
+                )
                 return
 
-            renderingMessage = await message.reply("Rendering save...", mention_author=False)
-            
+            renderingMessage = await message.reply(
+                "Rendering save...", mention_author=False
+            )
+
             renderStart = time.time()
             renderTask = asyncio.create_task(render(saveString, message.id))
             success, renderedImage, save = await renderTask
             if not success:
-                await message.reply(f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds.")
+                await message.reply(
+                    f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds."
+                )
                 return
             renderTime = round((time.time() - renderStart) * 1000, 1)
             previewFile = discord.File(fp=renderedImage, filename="preview.gif")
@@ -193,54 +223,89 @@ async def on_message(message):
             embed.set_image(url="attachment://preview.gif")
 
             totalTime = round((time.time() - totalStart) * 1000, 1)
-            embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
+            embed.set_footer(
+                text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms."
+            )
 
             await renderingMessage.delete()
-            await message.reply("Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
+            await message.reply(
+                "Here's a preview of that save!",
+                file=previewFile,
+                embed=embed,
+                mention_author=False,
+            )
             os.remove(renderedImage)
         except Exception as e:
-            print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
-            await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}")
+            print(
+                f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}"
+            )
+            await message.reply(
+                f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}"
+            )
     else:
         messageHasSave = re.search(saveRegex, message.content)
         if messageHasSave:
             saveString = messageHasSave.group(0)
             if len(saveString) > maxSize:
-                await message.reply(f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!", mention_author=False)
+                await message.reply(
+                    f"Sorry, I couldn't render a preview for that save, it's over {maxSize//1000} KiB!",
+                    mention_author=False,
+                )
                 return
             headers = {"User-Agent": "Mozilla/5.0"}
             payload = {"lexer": "_text", "format": "url", "content": saveString}
 
-            renderingMessage = await message.reply("Rendering save...", mention_author=False)
+            renderingMessage = await message.reply(
+                "Rendering save...", mention_author=False
+            )
             try:
-                res = requests.post("https://dpaste.org/api/", headers=headers, data=payload)
+                res = requests.post(
+                    "https://dpaste.org/api/", headers=headers, data=payload
+                )
                 res.raise_for_status()
                 url = res.text.rstrip("\n") + "/raw"
-    
+
                 renderStart = time.time()
                 renderTask = asyncio.create_task(render(saveString, message.id))
                 success, renderedImage, save = await renderTask
                 if not success:
-                    await message.reply(f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds.")
+                    await message.reply(
+                        f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds."
+                    )
                     return
                 renderTime = round((time.time() - renderStart) * 1000, 1)
                 previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                 embed = discord.Embed(title="Save info")
                 embed.add_field(name="Blocks", value=save.blockCount, inline=True)
-                embed.add_field(name="Connections", value=save.connectionCount, inline=True)
-                embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
+                embed.add_field(
+                    name="Connections", value=save.connectionCount, inline=True
+                )
+                embed.add_field(
+                    name="Raw size", value=str(len(saveString)), inline=True
+                )
                 embed.add_field(name="Link", value=url)
                 embed.set_image(url="attachment://preview.gif")
-    
+
                 totalTime = round((time.time() - totalStart) * 1000, 1)
-                embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
-    
+                embed.set_footer(
+                    text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms."
+                )
+
                 await renderingMessage.delete()
-                await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
+                await message.reply(
+                    f"Here's a preview of that save!",
+                    file=previewFile,
+                    embed=embed,
+                    mention_author=False,
+                )
                 os.remove(renderedImage)
             except Exception as e:
-                print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
-                await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}")
+                print(
+                    f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}"
+                )
+                await message.reply(
+                    f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}"
+                )
         elif len(message.attachments) > 0:
             file = message.attachments[0]
             if file.size > maxSize:
@@ -251,36 +316,58 @@ async def on_message(message):
                 saveString = fileString
                 headers = {"User-Agent": "Mozilla/5.0"}
                 payload = {"lexer": "_text", "format": "url", "content": saveString}
-    
-                renderingMessage = await message.reply("Rendering save...", mention_author=False)
+
+                renderingMessage = await message.reply(
+                    "Rendering save...", mention_author=False
+                )
                 try:
-                    res = requests.post("https://dpaste.org/api/", headers=headers, data=payload)
+                    res = requests.post(
+                        "https://dpaste.org/api/", headers=headers, data=payload
+                    )
                     res.raise_for_status()
                     url = res.text.rstrip("\n") + "/raw"
-    
+
                     renderStart = time.time()
                     renderTask = asyncio.create_task(render(saveString, message.id))
                     success, renderedImage, save = await renderTask
                     if not success:
-                        await message.reply(f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds.")
+                        await message.reply(
+                            f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds."
+                        )
                         return
                     renderTime = round((time.time() - renderStart) * 1000, 1)
                     previewFile = discord.File(fp=renderedImage, filename="preview.gif")
                     embed = discord.Embed(title="Save info")
                     embed.add_field(name="Blocks", value=save.blockCount, inline=True)
-                    embed.add_field(name="Connections", value=save.connectionCount, inline=True)
-                    embed.add_field(name="Raw size", value=str(len(saveString)), inline=True)
+                    embed.add_field(
+                        name="Connections", value=save.connectionCount, inline=True
+                    )
+                    embed.add_field(
+                        name="Raw size", value=str(len(saveString)), inline=True
+                    )
                     embed.add_field(name="Link", value=url)
                     embed.set_image(url="attachment://preview.gif")
-    
+
                     totalTime = round((time.time() - totalStart) * 1000, 1)
-                    embed.set_footer(text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms.")
-    
+                    embed.set_footer(
+                        text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms."
+                    )
+
                     await renderingMessage.delete()
-                    await message.reply(f"Here's a preview of that save!", file=previewFile, embed=embed, mention_author=False)
+                    await message.reply(
+                        f"Here's a preview of that save!",
+                        file=previewFile,
+                        embed=embed,
+                        mention_author=False,
+                    )
                     os.remove(renderedImage)
                 except Exception as e:
-                    print(f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}")
-                    await message.reply(f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}")
+                    print(
+                        f"An error occured while uploading to dpaste: {traceback.format_exc()}: {e}"
+                    )
+                    await message.reply(
+                        f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}"
+                    )
+
 
 bot.run(TOKEN)

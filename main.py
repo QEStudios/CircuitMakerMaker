@@ -150,7 +150,12 @@ async def on_message(message):
             and str(message.channel.id) == "1220285303479337031"
             and str(message.guild.id) == "869012824620417075"
         )
-    ) and len(message.attachments) > 0:
+    ) and any(
+        attachment.width != None
+        or attachment.height != None
+        or attachment.content_type.startswith("video/")
+        for attachment in message.attachments
+    ):
         await message.reply("literally me", mention_author=False)
         return
 

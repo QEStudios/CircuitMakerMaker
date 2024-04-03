@@ -5,7 +5,7 @@ FACE_CHANCE = 0.25
 FACE = [" (・`ω´・) ", " ;;w;; ", " owo ", " UwU ", " >w< ", " ^w^ "]
 
 
-def uwuify(string):
+def uwuify_string(string):
     if len(string) > 0:
         uwu = string
         fr = "rlRL"

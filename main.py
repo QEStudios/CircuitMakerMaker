@@ -1,5 +1,5 @@
 from render import render
-from uwuify import uwuify
+from uwuify import uwuify_string
 import generate
 import discord
 from discord import option
@@ -83,7 +83,7 @@ async def uwuify(ctx, message: str):
             ephemeral=True,
         )
         return
-    uwu = await uwuify(message)
+    uwu = await uwuify_string(message)
     await ctx.respond(uwu)
 
 

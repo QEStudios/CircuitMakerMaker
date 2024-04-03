@@ -1,4 +1,5 @@
 from render import render
+from uwuify import uwuify
 import generate
 import discord
 from discord import option
@@ -71,6 +72,24 @@ async def clock(ctx, period: int):
     save = generate.clock(period)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
+
+
+@generateCommand.command(description="Convert a message into uwu-speak")
+@option(
+    "message",
+    description="The message to convert.",
+)
+async def clock(ctx, message: str):
+    await ctx.defer()
+    if len(message) == 0:
+        await ctx.respond(
+            "Invalid argument for `message`: Message must be at least 1 character long.",
+            ephemeral=True,
+        )
+        return
+    uwu = uwuify(message)
+    ctx.message.delete()
+    await ctx.send(uwu)
 
 
 @generateCommand.command(

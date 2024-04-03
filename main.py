@@ -79,7 +79,7 @@ async def clock(ctx, period: int):
     "message",
     description="The message to convert.",
 )
-async def clock(ctx, message: str):
+async def uwuify(ctx, message: str):
     await ctx.defer()
     if len(message) == 0:
         await ctx.respond(

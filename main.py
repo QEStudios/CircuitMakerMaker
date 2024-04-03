@@ -83,7 +83,7 @@ async def uwuify(ctx, message: str):
             ephemeral=True,
         )
         return
-    uwu = await uwuify_string(message)
+    uwu = uwuify_string(message)
     await ctx.respond(uwu)
 
 

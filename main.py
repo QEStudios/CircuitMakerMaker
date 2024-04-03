@@ -74,7 +74,7 @@ async def clock(ctx, period: int):
     await ctx.respond("Here's your generated save!", file=file)
 
 
-@generateCommand.command(description="Convert a message into uwu-speak")
+@bot.slash_command(description="Convert a message into uwu-speak")
 @option(
     "message",
     description="The message to convert.",

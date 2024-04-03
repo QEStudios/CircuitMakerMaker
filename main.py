@@ -88,7 +88,7 @@ async def uwuify(ctx, message: str):
         )
         return
     uwu = uwuify(message)
-    ctx.message.delete()
+    await ctx.message.delete()
     await ctx.send(uwu)
 
 

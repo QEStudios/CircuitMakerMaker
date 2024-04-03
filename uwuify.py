@@ -12,7 +12,6 @@ def uwuify(string):
         to = "wwWW"
         for i, _ in enumerate(fr):
             uwu = uwu.replace(fr[i], to[i])
-            print(fr[i], to[i], uwu)
         uwu = re.sub(r"(n)([aeiou])", r"\1y\2", uwu, flags=re.IGNORECASE)
         uwu.replace("ove", "uv")
 

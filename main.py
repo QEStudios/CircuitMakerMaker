@@ -87,8 +87,8 @@ async def uwuify(ctx, message: str):
             ephemeral=True,
         )
         return
-    uwu = uwuify(message)
-    await ctx.send(uwu)
+    uwu = await uwuify(message)
+    await ctx.respond(uwu)
 
 
 @generateCommand.command(

@@ -24,7 +24,3 @@ def uwuify(string):
 
         uwu = re.sub(r"(\.+)", replace_periods, uwu)
         return uwu
-
-
-uwuified_text = uwuify(input("text to uwu: "))
-print(uwuified_text)

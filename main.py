@@ -75,10 +75,6 @@ async def clock(ctx, period: int):
 
 
 @bot.slash_command(description="Convert a message into uwu-speak")
-@option(
-    "message",
-    description="The message to convert.",
-)
 async def uwuify(ctx, message: str):
     await ctx.defer()
     if len(message) == 0:

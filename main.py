@@ -97,7 +97,7 @@ async def skmtime(ctx):
             ephemeral=True
         )
         return
-    resJson = json.loads(res.text())
+    resJson = json.loads(res.text)
     formatted_time = f"{resJson['date']} (MM/DD/YYYY), {resJson['time']}."
     await ctx.respond(
         f"Current time for skm: {formatted_time}"

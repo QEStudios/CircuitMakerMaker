@@ -12,6 +12,7 @@ import regex as re
 import requests
 import time
 import asyncio
+import json
 from PIL import Image
 
 load_dotenv()
@@ -96,7 +97,8 @@ async def skmtime(ctx):
             ephemeral=True
         )
         return
-    formatted_time = f"{res['date']} (MM/DD/YYYY), {res['time']}."
+    resJson = json.loads(res.text())
+    formatted_time = f"{resJson['date']} (MM/DD/YYYY), {resJson['time']}."
     await ctx.respond(
         f"Current time for skm: {formatted_time}"
     )

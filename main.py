@@ -96,7 +96,7 @@ async def skmtime(ctx):
             ephemeral=True
         )
         return
-    formatted_time = f"{res['date']} (MM/DD/YYYY), {res['time']}.")
+    formatted_time = f"{res['date']} (MM/DD/YYYY), {res['time']}."
     await ctx.respond(
         f"Current time for skm: {formatted_time}"
     )

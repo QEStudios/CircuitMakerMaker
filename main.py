@@ -86,6 +86,20 @@ async def uwuify(ctx, message: str):
     uwu = uwuify_string(message)
     await ctx.respond(uwu)
 
+@bot.slash_command(description="See what time it is for skm")
+async def skmtime(ctx):
+    await ctx.defer()
+    res = requests.get("https://timeapi.io/api/Time/current/zone?timeZone=Australia/Melbourne")
+    if res.status_code != 200:
+        await ctx.respond(
+            "There was an error contacting `timeapi.io`. Please try again in a few minutes.",
+            ephemeral=True
+        )
+        return
+    formatted_time = f"{res['date']} (MM/DD/YYYY), {res['time']}.")
+    await ctx.respond(
+        f"Current time for skm: {formatted_time}"
+    )
 
 @generateCommand.command(
     description="A counter that counts up or down within a specific range."

@@ -98,9 +98,15 @@ async def skmtime(ctx):
         )
         return
     resJson = json.loads(res.text)
-    formatted_time = f"{resJson['date']} (MM/DD/YYYY), {resJson['time']}."
+    modTime = resJson["time"]
+    modTime = (int(modTime.split(":")[0]) - 1) % 12 + 1
+    if int(resJson["time"].split(":")[0]) > 11:
+        amPm = "PM"
+    else:
+        amPm = "AM"
+    formatted_time = f"{modTime} {amPm}"
     await ctx.respond(
-        f"Current time for skm: {formatted_time}"
+        f"Current time for skm: {formatted_time}."
     )
 
 @generateCommand.command(

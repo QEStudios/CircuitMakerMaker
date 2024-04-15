@@ -104,7 +104,8 @@ async def skmtime(ctx):
         amPm = "PM"
     else:
         amPm = "AM"
-    formatted_time = f"{modTime} {amPm}"
+    minutes = resJson["time"].split(":")[1]
+    formatted_time = f"{modTime:02}:{minutes} {amPm}"
     await ctx.respond(
         f"Current time for skm: {formatted_time}."
     )

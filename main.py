@@ -127,7 +127,7 @@ async def randomgame(ctx):
     image = resJson["image"]
     placeId = resJson["placeId"]
     await ctx.respond(
-        f"Random roblox game:\n*{name}* by {creatorName}\nhttps://www.roblox.com/games/{placeId}"
+        f"Random roblox game:\n**{name}** by {creatorName}\nhttps://www.roblox.com/games/{placeId}"
     )
 
 @generateCommand.command(

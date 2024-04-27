@@ -110,6 +110,26 @@ async def skmtime(ctx):
         f"Current time for skm: {formatted_time}."
     )
 
+@bot.slash_command(description="Find a random roblox game")
+async def randomgame(ctx):
+    await ctx.defer()
+    res = requests.get("https://random-roblox-game.vercel.app/api/get-random?popular=no")
+    if res.status != 200:
+        await ctx.respond(
+            "There was an error contacting `random-roblox-game.vercel.app`. Please try again in a few minutes.",
+            ephemeral=True
+        )
+        return
+    resJson = json.loads(res.text)
+    name = resJson["name"]
+    creatorName = resJson["creatorName"]
+    description = resJson["desc"]
+    image = resJson["image"]
+    placeId = resJson["placeId"]
+    await ctx.respond(
+        f"Random roblox game:\n*{name}* by {creatorName}\nhttps://www.roblox.com/games/{placeId}"
+    )
+
 @generateCommand.command(
     description="A counter that counts up or down within a specific range."
 )

@@ -114,7 +114,7 @@ async def skmtime(ctx):
 async def randomgame(ctx):
     await ctx.defer()
     res = requests.get("https://random-roblox-game.vercel.app/api/get-random?popular=no")
-    if res.status != 200:
+    if res.status_code != 200:
         await ctx.respond(
             "There was an error contacting `random-roblox-game.vercel.app`. Please try again in a few minutes.",
             ephemeral=True

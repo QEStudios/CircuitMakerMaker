@@ -537,7 +537,7 @@ async def check_rss_feed():
         except Exception as e:
             print("Error occurred:", e)
 
-        await asyncio.sleep(1)
+        await asyncio.sleep(60)
 
 
 def main():

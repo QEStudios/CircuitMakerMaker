@@ -13,11 +13,17 @@ import requests
 import time
 import asyncio
 import json
+import threading
+import feedparser
+import ffmpeg
+from pytube import YouTube
 from PIL import Image
 
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
+
+DAYTELL_CHANNEL_ID = "UCvL2QwDXWFJn1J5aNjaUczw"
 
 intents = discord.Intents.all()
 
@@ -87,14 +93,17 @@ async def uwuify(ctx, message: str):
     uwu = uwuify_string(message)
     await ctx.respond(uwu)
 
+
 @bot.slash_command(description="See what time it is for skm")
 async def skmtime(ctx):
     await ctx.defer()
-    res = requests.get("https://timeapi.io/api/Time/current/zone?timeZone=Australia/Melbourne")
+    res = requests.get(
+        "https://timeapi.io/api/Time/current/zone?timeZone=Australia/Melbourne"
+    )
     if res.status_code != 200:
         await ctx.respond(
             "There was an error contacting `timeapi.io`. Please try again in a few minutes.",
-            ephemeral=True
+            ephemeral=True,
         )
         return
     resJson = json.loads(res.text)
@@ -106,18 +115,19 @@ async def skmtime(ctx):
         amPm = "AM"
     minutes = resJson["time"].split(":")[1]
     formatted_time = f"{modTime:02}:{minutes} {amPm}"
-    await ctx.respond(
-        f"Current time for skm: {formatted_time}."
-    )
+    await ctx.respond(f"Current time for skm: {formatted_time}.")
+
 
 @bot.slash_command(description="Find a random roblox game")
 async def randomgame(ctx):
     await ctx.defer()
-    res = requests.get("https://random-roblox-game.vercel.app/api/get-random?popular=no")
+    res = requests.get(
+        "https://random-roblox-game.vercel.app/api/get-random?popular=no"
+    )
     if res.status_code != 200:
         await ctx.respond(
             "There was an error contacting `random-roblox-game.vercel.app`. Please try again in a few minutes.",
-            ephemeral=True
+            ephemeral=True,
         )
         return
     resJson = json.loads(res.text)
@@ -129,6 +139,7 @@ async def randomgame(ctx):
     await ctx.respond(
         f"Random roblox game:\n**{name}** by {creatorName}\n<https://www.roblox.com/games/{placeId}>"
     )
+
 
 @generateCommand.command(
     description="A counter that counts up or down within a specific range."
@@ -441,4 +452,99 @@ async def on_message(message):
                     )
 
 
-bot.run(TOKEN)
+# thanks https://stackoverflow.com/a/64439347
+def compress_video(video_full_path, output_file_name, target_size):
+    # Reference: https://en.wikipedia.org/wiki/Bit_rate#Encoding_bit_rate
+    min_audio_bitrate = 32000
+    max_audio_bitrate = 256000
+
+    probe = ffmpeg.probe(video_full_path)
+    # Video duration, in s.
+    duration = float(probe["format"]["duration"])
+    # Audio bitrate, in bps.
+    audio_bitrate = float(
+        next((s for s in probe["streams"] if s["codec_type"] == "audio"), None)[
+            "bit_rate"
+        ]
+    )
+    # Target total bitrate, in bps.
+    target_total_bitrate = (target_size * 1024 * 8) / (1.073741824 * duration)
+
+    # Target audio bitrate, in bps
+    if 10 * audio_bitrate > target_total_bitrate:
+        audio_bitrate = target_total_bitrate / 10
+        if audio_bitrate < min_audio_bitrate < target_total_bitrate:
+            audio_bitrate = min_audio_bitrate
+        elif audio_bitrate > max_audio_bitrate:
+            audio_bitrate = max_audio_bitrate
+    # Target video bitrate, in bps.
+    video_bitrate = target_total_bitrate - audio_bitrate
+
+    i = ffmpeg.input(video_full_path)
+    ffmpeg.output(
+        i, os.devnull, **{"c:v": "libx264", "b:v": video_bitrate, "pass": 1, "f": "mp4"}
+    ).overwrite_output().run()
+    ffmpeg.output(
+        i,
+        output_file_name,
+        **{
+            "c:v": "libx264",
+            "b:v": video_bitrate,
+            "pass": 2,
+            "c:a": "aac",
+            "b:a": audio_bitrate,
+        },
+    ).overwrite_output().run()
+
+
+async def check_rss_feed():
+    await bot.wait_until_ready()
+    while True:
+        rss_feed_url = (
+            f"https://www.youtube.com/feeds/videos.xml?channel_id={DAYTELL_CHANNEL_ID}"
+        )
+        if not os.path.exists("sentvideos.txt"):
+            open("sentvideos.txt", "w")
+        with open("sentvideos.txt", "r") as f:
+            sent_videos = f.read().split("\n")
+        try:
+            feed = feedparser.parse(rss_feed_url)
+            latest = feed.entries[0]
+            latest_link = latest.link
+            if latest_link not in sent_videos:
+                print("NEW VIDEO")
+                print(latest_link)
+
+                YouTube(latest_link).streams.filter(
+                    progressive=True, file_extension="mp4"
+                ).order_by("resolution").desc().first().download(filename="daytell.mp4")
+                if os.path.getsize("daytell.mp4") > 10_000_000:
+                    compress_video(
+                        os.path.join(os.getcwd(), "daytell.mp4"),
+                        "daytell_compressed.mp4",
+                        10_000,
+                    )
+                    file_to_upload = "daytell_compressed.mp4"
+                else:
+                    file_to_upload = "daytell.mp4"
+
+                file = discord.File(fp=file_to_upload, filename="video.mp4")
+                channel = bot.get_channel(869012824620417078)
+                await channel.send("", file=file)
+
+                with open("sentvideos.txt", "a") as f:
+                    f.write(latest_link + "\n")
+
+        except Exception as e:
+            print("Error occurred:", e)
+
+        await asyncio.sleep(1)
+
+
+def main():
+    bot.loop.create_task(check_rss_feed())
+    bot.run(TOKEN)
+
+
+if __name__ == "__main__":
+    main()

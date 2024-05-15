@@ -4,3 +4,6 @@ numpy
 pillow
 py-cord
 python-dotenv
+feedparser
+tasks
+pytube

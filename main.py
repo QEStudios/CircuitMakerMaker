@@ -13,7 +13,6 @@ import requests
 import time
 import asyncio
 import json
-import threading
 import feedparser
 import ffmpeg
 from pytube import YouTube

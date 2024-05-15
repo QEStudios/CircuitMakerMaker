@@ -529,7 +529,7 @@ async def check_rss_feed():
                     file_to_upload = "daytell.mp4"
 
                 file = discord.File(fp=file_to_upload, filename="video.mp4")
-                channel = bot.get_channel(869012824620417078)
+                channel = bot.get_channel(1187659525248004210)
                 await channel.send("", file=file)
 
                 with open("sentvideos.txt", "a") as f:

@@ -515,8 +515,8 @@ async def check_rss_feed():
                 print(latest_link)
 
                 YouTube(latest_link).streams.filter(
-                    progressive=True, file_extension="mp4"
-                ).order_by("resolution").desc().first().download(filename="daytell.mp4")
+                    progressive=True, file_extension="mp4", res="720p"
+                ).desc().first().download(filename="daytell.mp4")
                 if os.path.getsize("daytell.mp4") > 10_000_000:
                     compress_video(
                         os.path.join(os.getcwd(), "daytell.mp4"),

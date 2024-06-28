@@ -1,3 +1,4 @@
+import discord.app_commands
 from render import render
 from uwuify import uwuify_string
 import generate
@@ -38,6 +39,7 @@ async def on_ready():
     await bot.change_presence(activity=game)
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @bot.slash_command(description="Get the UserId for a roblox username.")
 async def getuser(ctx, username: str):
     await ctx.defer()
@@ -60,6 +62,7 @@ generateCommand = bot.create_group(
 )
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @generateCommand.command(description="A clock with a given period.")
 @option(
     "period",
@@ -80,6 +83,7 @@ async def clock(ctx, period: int):
     await ctx.respond("Here's your generated save!", file=file)
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @bot.slash_command(description="Convert a message into uwu-speak")
 async def uwuify(ctx, message: str):
     await ctx.defer()
@@ -93,6 +97,7 @@ async def uwuify(ctx, message: str):
     await ctx.respond(uwu)
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @bot.slash_command(description="See what time it is for skm")
 async def skmtime(ctx):
     await ctx.defer()
@@ -117,6 +122,7 @@ async def skmtime(ctx):
     await ctx.respond(f"Current time for skm: {formatted_time}.")
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @bot.slash_command(description="Find a random roblox game")
 async def randomgame(ctx):
     await ctx.defer()
@@ -140,6 +146,7 @@ async def randomgame(ctx):
     )
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @generateCommand.command(
     description="A counter that counts up or down within a specific range."
 )
@@ -181,6 +188,7 @@ async def counter(ctx, min: int, max: int, direction: str):
     await ctx.respond("Here's your generated save!", file=file)
 
 
+@discord.app_commands.allowed_installs(guilds=True, users=True)
 @generateCommand.command(description="Convert an image into a save.")
 @option("image", discord.Attachment, description="The image to convert.")
 @option(

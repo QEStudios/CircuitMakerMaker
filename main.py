@@ -22,7 +22,11 @@ load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 
-DAYTELL_CHANNEL_ID = "UCvL2QwDXWFJn1J5aNjaUczw"
+youtube_channels = [
+    "UCvL2QwDXWFJn1J5aNjaUczw",
+    "UCUdeaj2BNwbM3qa-u705a4w",
+    "UCU5Cd2fKEvidHzxjj4UIiug",
+]
 
 intents = discord.Intents.all()
 
@@ -499,43 +503,44 @@ def compress_video(video_full_path, output_file_name, target_size):
 async def check_rss_feed():
     await bot.wait_until_ready()
     while True:
-        rss_feed_url = (
-            f"https://www.youtube.com/feeds/videos.xml?channel_id={DAYTELL_CHANNEL_ID}"
-        )
-        if not os.path.exists("sentvideos.txt"):
-            open("sentvideos.txt", "w")
-        with open("sentvideos.txt", "r") as f:
-            sent_videos = f.read().split("\n")
-        try:
-            feed = feedparser.parse(rss_feed_url)
-            latest = feed.entries[0]
-            latest_link = latest.link
-            if latest_link not in sent_videos:
-                print("NEW VIDEO")
-                print(latest_link)
+        for channel in youtube_channels:
+            rss_feed_url = (
+                f"https://www.youtube.com/feeds/videos.xml?channel_id={channel}"
+            )
+            if not os.path.exists("sentvideos.txt"):
+                open("sentvideos.txt", "w")
+            with open("sentvideos.txt", "r") as f:
+                sent_videos = f.read().split("\n")
+            try:
+                feed = feedparser.parse(rss_feed_url)
+                latest = feed.entries[0]
+                latest_link = latest.link
+                if latest_link not in sent_videos:
+                    print("NEW VIDEO")
+                    print(latest_link)
 
-                YouTube(latest_link).streams.filter(
-                    progressive=True, file_extension="mp4", res="720p"
-                ).desc().first().download(filename="daytell.mp4")
-                if os.path.getsize("daytell.mp4") > 10_000_000:
-                    compress_video(
-                        os.path.join(os.getcwd(), "daytell.mp4"),
-                        "daytell_compressed.mp4",
-                        10_000,
-                    )
-                    file_to_upload = "daytell_compressed.mp4"
-                else:
-                    file_to_upload = "daytell.mp4"
+                    YouTube(latest_link).streams.filter(
+                        progressive=True, file_extension="mp4", res="720p"
+                    ).desc().first().download(filename="daytell.mp4")
+                    if os.path.getsize("daytell.mp4") > 10_000_000:
+                        compress_video(
+                            os.path.join(os.getcwd(), "daytell.mp4"),
+                            "daytell_compressed.mp4",
+                            10_000,
+                        )
+                        file_to_upload = "daytell_compressed.mp4"
+                    else:
+                        file_to_upload = "daytell.mp4"
 
-                file = discord.File(fp=file_to_upload, filename="video.mp4")
-                channel = bot.get_channel(1187659525248004210)
-                await channel.send("", file=file)
+                    file = discord.File(fp=file_to_upload, filename="video.mp4")
+                    channel = bot.get_channel(1187659525248004210)
+                    await channel.send("", file=file)
 
-                with open("sentvideos.txt", "a") as f:
-                    f.write(latest_link + "\n")
+                    with open("sentvideos.txt", "a") as f:
+                        f.write(latest_link + "\n")
 
-        except Exception as e:
-            print("Error occurred:", e)
+            except Exception as e:
+                print("Error occurred:", e)
 
         await asyncio.sleep(60)
 

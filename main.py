@@ -396,7 +396,10 @@ async def on_message(message):
             if file.size > maxSize:
                 return
             fileBytes = await message.attachments[0].read()
-            fileString = fileBytes.decode()
+            try:
+                fileString = fileBytes.decode()
+            except UnicodeDecodeError:
+                return
             if re.match(saveRegex, fileString):
                 saveString = fileString
                 headers = {"User-Agent": "Mozilla/5.0"}

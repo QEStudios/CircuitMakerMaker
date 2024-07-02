@@ -520,17 +520,26 @@ async def check_rss_feed():
                     print(latest_link)
 
                     YouTube(latest_link).streams.filter(
-                        progressive=True, file_extension="mp4", res="720p"
-                    ).desc().first().download(filename="daytell.mp4")
-                    if os.path.getsize("daytell.mp4") > 10_000_000:
+                        type="video", adaptive=True
+                    ).first().download(filename="video")
+                    YouTube(latest_link).streams.filter(
+                        only_audio=True
+                    ).last().download(filename="audio")
+                    input_video = ffmpeg.input("video")
+                    input_audio = ffmpeg.input("audio")
+                    ffmpeg.concat(input_video, input_audio, v=1, a=1).output(
+                        "output.mp4"
+                    ).overwrite_output().run()
+
+                    if os.path.getsize("output.mp4") > 10_000_000:
                         compress_video(
-                            os.path.join(os.getcwd(), "daytell.mp4"),
-                            "daytell_compressed.mp4",
+                            os.path.join(os.getcwd(), "output.mp4"),
+                            "output_compressed.mp4",
                             10_000,
                         )
-                        file_to_upload = "daytell_compressed.mp4"
+                        file_to_upload = "output_compressed.mp4"
                     else:
-                        file_to_upload = "daytell.mp4"
+                        file_to_upload = "output.mp4"
 
                     file = discord.File(fp=file_to_upload, filename="video.mp4")
                     channel = bot.get_channel(1187659525248004210)

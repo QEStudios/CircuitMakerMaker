@@ -163,5 +163,6 @@ log.txt
 pid.txt
 .vscode
 
-daytell.mp4
-daytell-compressed.mp4
+audio
+video
+output.mp4

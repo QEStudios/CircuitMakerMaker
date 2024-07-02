@@ -6,4 +6,4 @@ py-cord
 python-dotenv
 feedparser
 pytube
-ffmpeg
+ffmpeg-python

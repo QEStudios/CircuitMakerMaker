@@ -245,6 +245,7 @@ async def render(saveString, messageId):
             (98, 24, 148),
             (235, 233, 183),
             (52, 132, 182),
+            (255, 255, 255)
         ]
 
         interPoints = project(points, angle)

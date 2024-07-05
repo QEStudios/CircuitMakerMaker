@@ -5,10 +5,7 @@ import imageGen
 import math
 
 def clock(period):
-    if period <= 5:
-        return clockGen.chain(period)
-    else:
-        return clockGen.cycle(period)
+    return clockGen.cycle(period)
 
 def counter(minVal, maxVal, direction):
     if minVal == 0 and (math.log2(maxVal+1))%1 == 0 and direction == 1:

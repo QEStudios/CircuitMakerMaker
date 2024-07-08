@@ -23,9 +23,9 @@ load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
 youtube_channels = [
-    "UCvL2QwDXWFJn1J5aNjaUczw",
-    "UCUdeaj2BNwbM3qa-u705a4w",
-    "UCU5Cd2fKEvidHzxjj4UIiug",
+    "UCvL2QwDXWFJn1J5aNjaUczw", # Daytell
+    "UCUdeaj2BNwbM3qa-u705a4w", # Today's Number
+    # "UCU5Cd2fKEvidHzxjj4UIiug", # Are Things Swell
 ]
 
 intents = discord.Intents.all()

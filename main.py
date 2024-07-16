@@ -23,8 +23,8 @@ load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
 youtube_channels = [
-    "UCvL2QwDXWFJn1J5aNjaUczw", # Daytell
-    "UCUdeaj2BNwbM3qa-u705a4w", # Today's Number
+    "UCvL2QwDXWFJn1J5aNjaUczw",  # Daytell
+    "UCUdeaj2BNwbM3qa-u705a4w",  # Today's Number
     # "UCU5Cd2fKEvidHzxjj4UIiug", # Are Things Swell
 ]
 
@@ -195,11 +195,17 @@ async def counter(ctx, min: int, max: int, direction: str):
     default=100,
     required=False,
 )
-async def image(ctx, image: discord.Attachment, size: int):
+@option(
+    "transparency",
+    description="Whether to enable transparency for the generated image.",
+    default=True,
+    required=False,
+)
+async def image(ctx, image: discord.Attachment, size: int, transparency: bool):
     await ctx.defer()
     imBytes = await image.read()
     im = Image.open(io.BytesIO(imBytes))
-    save = generate.image(im, size)
+    save = generate.image(im, size, transparency)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 

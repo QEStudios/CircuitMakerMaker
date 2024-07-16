@@ -3,7 +3,7 @@ import math
 from PIL import Image
 
 
-def image(im: Image.Image, size):
+def image(im: Image.Image, size: int, transparency: bool):
     largestDim = max(im.width, im.height)
     scale = size / largestDim
     dim = (int(im.width * scale), int(im.height * scale))
@@ -18,14 +18,14 @@ def image(im: Image.Image, size):
             pixel_index = y * dim[0] + x
             if pixel_index < len(pixels):
                 pixel = pixels[pixel_index]
-                transparency = round(pixel[3] * (100 / 255))
-                if transparency < 5:
+                alpha = round(pixel[3] * (100 / 255))
+                if alpha < 5 and transparency:
                     continue
-                if transparency < 95:
+                if alpha < 95 and transparency:
                     save.addBlock(
                         cm2.LED,
                         (x, dim[1] - 1 - y, 0),
-                        properties=[pixel[0], pixel[1], pixel[2], 100, transparency],
+                        properties=[pixel[0], pixel[1], pixel[2], 100, alpha],
                     )
                 else:
                     save.addBlock(

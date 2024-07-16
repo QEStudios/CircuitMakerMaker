@@ -18,12 +18,20 @@ def image(im: Image.Image, size):
             pixel_index = y * dim[0] + x
             if pixel_index < len(pixels):
                 pixel = pixels[pixel_index]
-                if pixel[3] < 127:
+                transparency = round(pixel[3] * (100 / 255))
+                if transparency < 5:
                     continue
-                save.addBlock(
-                    cm2.TILE,
-                    (x, dim[1] - 1 - y, 0),
-                    properties=[pixel[0], pixel[1], pixel[2]],
-                )
+                if transparency < 95:
+                    save.addBlock(
+                        cm2.LED,
+                        (x, dim[1] - 1 - y, 0),
+                        properties=[pixel[0], pixel[1], pixel[2], 100, transparency],
+                    )
+                else:
+                    save.addBlock(
+                        cm2.TILE,
+                        (x, dim[1] - 1 - y, 0),
+                        properties=[pixel[0], pixel[1], pixel[2]],
+                    )
 
     return save

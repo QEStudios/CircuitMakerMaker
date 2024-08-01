@@ -17,6 +17,7 @@ import feedparser
 import ffmpeg
 from pytubefix import YouTube
 from PIL import Image
+import subprocess
 
 load_dotenv()
 
@@ -538,11 +539,13 @@ async def check_rss_feed():
                            allow_oauth_cache=True).streams.filter(
                         only_audio=True
                     ).last().download(filename="audio")
-                    input_video = ffmpeg.input("video")
-                    input_audio = ffmpeg.input("audio")
-                    ffmpeg.concat(input_video, input_audio, v=1, a=1).output(
-                        "output.mp4"
-                    ).overwrite_output().run()
+                    # input_video = ffmpeg.input("video")
+                    # input_audio = ffmpeg.input("audio")
+                    # ffmpeg.concat(input_video, input_audio, v=1, a=1).output(
+                    #     "output.mp4"
+                    # ).overwrite_output().run()
+
+                    subprocess.run("ffmpeg -y -i video -i audio -c copy output.mp4")
 
                     if os.path.getsize("output.mp4") > 10_000_000:
                         compress_video(

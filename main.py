@@ -15,7 +15,7 @@ import asyncio
 import json
 import feedparser
 import ffmpeg
-from pytube import YouTube
+from pytubefix import YouTube
 from PIL import Image
 
 load_dotenv()

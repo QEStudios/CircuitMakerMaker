@@ -528,10 +528,14 @@ async def check_rss_feed():
                     print("NEW VIDEO")
                     print(latest_link)
 
-                    YouTube(latest_link).streams.filter(
+                    YouTube(latest_link,
+                           use_oauth=True,
+                           allow_oauth_cache=True).streams.filter(
                         type="video", adaptive=True
                     ).first().download(filename="video")
-                    YouTube(latest_link).streams.filter(
+                    YouTube(latest_link,
+                           use_oauth=True,
+                           allow_oauth_cache=True).streams.filter(
                         only_audio=True
                     ).last().download(filename="audio")
                     input_video = ffmpeg.input("video")

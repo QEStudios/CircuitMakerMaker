@@ -9,9 +9,22 @@ import asyncio
 from transparentGifWorkaround import save_transparent_gif
 
 MAX_TIME = 120
+ReplaceMissingValues = True
 
 
 async def render(saveString, messageId):
+    if saveString and ReplaceMissingValues:
+        # split savestring up into block
+        segments = input_str.split(';')
+        processed_segments = []
+         for segment in segments:
+            # split block up into data
+            values = segment.split(',')
+            processed_values = ['0' if value == '' else value for value in values]
+            # add that correction onto processed
+            processed_segments.append(','.join(processed_values))
+        # recreate the savestring
+        saveString = ';'.join(processed_segments)
     def project(points, rot):
         a = math.asin(math.tan(math.radians(30)))
         b = math.radians(rot)

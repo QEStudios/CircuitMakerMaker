@@ -50,6 +50,8 @@ async def getuser(ctx, username: str):
     payload = {"usernames": [username], "excludeBannedUsers": True}
     res = requests.post(userUrl, json=payload)
     resJson = res.json()
+    if len(resJson["data"]) == 0:
+        await ctx.respond("Invalid username.", ephemeral=True)
     userId = resJson["data"][0]["id"]
     await ctx.respond(str(userId), ephemeral=True)
 

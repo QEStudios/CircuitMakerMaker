@@ -547,7 +547,7 @@ async def check_rss_feed():
                     #     "output.mp4"
                     # ).overwrite_output().run()
 
-                    subprocess.run("ffmpeg -y -i video -i audio -acodec copy -vcodec copy output.mp4", shell=True)
+                    subprocess.run("ffmpeg -y -i video -i audio -acodec copy -vf 'scale=if(gte(iw\,ih)\,min(1280\,iw)\,-2):if(lt(iw\,ih)\,min(1280\,ih)\,-2)' output.mp4", shell=True)
 
                     if os.path.getsize("output.mp4") > 10_000_000:
                         compress_video(

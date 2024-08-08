@@ -26,7 +26,7 @@ TOKEN = os.getenv("TOKEN")
 youtube_channels = [
     "UCvL2QwDXWFJn1J5aNjaUczw",  # Daytell
     "UCUdeaj2BNwbM3qa-u705a4w",  # Today's Number
-    # "UCU5Cd2fKEvidHzxjj4UIiug", # Are Things Swell
+    "UCU5Cd2fKEvidHzxjj4UIiug",  # Are Things Swell
 ]
 
 intents = discord.Intents.all()
@@ -567,7 +567,7 @@ async def check_rss_feed():
                         file_to_upload = "output.mp4"
 
                     file = discord.File(fp=file_to_upload, filename="video.mp4")
-                    channel = bot.get_channel(1187659525248004210)
+                    channel = bot.get_channel(869012824620417078)
                     await channel.send("", file=file)
 
                     with open("sentvideos.txt", "a") as f:

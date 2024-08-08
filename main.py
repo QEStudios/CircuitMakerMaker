@@ -531,23 +531,24 @@ async def check_rss_feed():
                     print("NEW VIDEO")
                     print(latest_link)
 
-                    YouTube(latest_link,
-                           use_oauth=True,
-                           allow_oauth_cache=True).streams.filter(
-                        type="video", adaptive=True
-                    ).first().download(filename="video")
-                    YouTube(latest_link,
-                           use_oauth=True,
-                           allow_oauth_cache=True).streams.filter(
-                        only_audio=True
-                    ).last().download(filename="audio")
+                    YouTube(
+                        latest_link, use_oauth=True, allow_oauth_cache=True
+                    ).streams.filter(type="video", adaptive=True).first().download(
+                        filename="video"
+                    )
+                    YouTube(
+                        latest_link, use_oauth=True, allow_oauth_cache=True
+                    ).streams.filter(only_audio=True).last().download(filename="audio")
                     # input_video = ffmpeg.input("video")
                     # input_audio = ffmpeg.input("audio")
                     # ffmpeg.concat(input_video, input_audio, v=1, a=1).output(
                     #     "output.mp4"
                     # ).overwrite_output().run()
 
-                    subprocess.run("ffmpeg -y -i video -i audio -acodec copy -b:v 350k -vf 'scale=if(gte(iw\,ih)\,min(1280\,iw)\,-2):if(lt(iw\,ih)\,min(1280\,ih)\,-2)' output.mp4", shell=True)
+                    subprocess.run(
+                        "ffmpeg -y -i video -i audio -acodec copy -b:v 800k -vf 'scale=if(gte(iw\,ih)\,min(1280\,iw)\,-2):if(lt(iw\,ih)\,min(1280\,ih)\,-2)' output.mp4",
+                        shell=True,
+                    )
 
                     if os.path.getsize("output.mp4") > 10_000_000:
                         compress_video(

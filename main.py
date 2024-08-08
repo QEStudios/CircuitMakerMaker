@@ -531,11 +531,17 @@ async def check_rss_feed():
                     print("NEW VIDEO")
                     print(latest_link)
 
-                    YouTube(
+                    streams = YouTube(
                         latest_link, use_oauth=True, allow_oauth_cache=True
-                    ).streams.filter(type="video", adaptive=True).first().download(
-                        filename="video"
-                    )
+                    ).streams
+                    try:
+                        streams.filter(
+                            type="video", adaptive=True, res="720p"
+                        ).first().download(filename="video")
+                    except:
+                        streams.filter(type="video", adaptive=True).first().download(
+                            filename="video"
+                        )
                     YouTube(
                         latest_link, use_oauth=True, allow_oauth_cache=True
                     ).streams.filter(only_audio=True).last().download(filename="audio")

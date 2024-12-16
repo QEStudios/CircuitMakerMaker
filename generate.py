@@ -6,10 +6,7 @@ import math
 
 
 def clock(period):
-    if period <= 5:
-        return clockGen.chain(period)
-    else:
-        return clockGen.cycle(period)
+    return clockGen.cycle(period)
 
 
 def counter(minVal, maxVal, direction):

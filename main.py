@@ -22,6 +22,12 @@ import subprocess
 load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
+DPASTE_AUTH = os.getenv("DPASTE_AUTH")
+
+DPASTE_HEADERS = {
+    "User-Agent": "Circuit Maker Maker Discord Bot (contact: qestudios17@gmail.com or @skmgeek on discord)",
+    "Authorization": f"Bearer {DPASTE_AUTH}",
+}
 
 youtube_channels = [
     "UCvL2QwDXWFJn1J5aNjaUczw",  # Daytell
@@ -242,7 +248,12 @@ async def on_message(message):
             await message.reply("literally me")
         return
 
-    linkRegex = r"(https?:\/\/(www\.)?(dpaste\.org/([-a-zA-Z0-9]*)(\/raw)?|pastebin\.com(\/raw)?\/([-a-zA-Z0-9]*)))"
+    linkRegex = (
+        r"(https?:\/\/(www\.)?"
+        r"(dpaste\.org/([-a-zA-Z0-9]*)(\/raw)?"
+        r"|pastebin\.com(\/raw)?\/([-a-zA-Z0-9]*)"
+        r"|dpaste\.com\/([-a-zA-Z0-9]*)))"
+    )
     saveRegex = (
         "(?<![\d\w,;?+])"  # Blocks
         "(?>"
@@ -285,6 +296,8 @@ async def on_message(message):
             if "/raw" not in url:
                 if "dpaste.org" in url:
                     url += "/raw"
+                elif "dpaste.com" in url:
+                    url += ".txt"
                 else:  # pastebin
                     url = url.split("com/")[0] + "com/raw/" + url.split("com/")[1]
             saveString = requests.get(url).text
@@ -346,18 +359,19 @@ async def on_message(message):
                     mention_author=False,
                 )
                 return
-            headers = {"User-Agent": "Mozilla/5.0"}
-            payload = {"lexer": "_text", "format": "url", "content": saveString}
+            data = {"content": saveString, "syntax": "text", "expiry_days": 365}
 
             renderingMessage = await message.reply(
                 "Rendering save...", mention_author=False
             )
             try:
                 res = requests.post(
-                    "https://dpaste.org/api/", headers=headers, data=payload
+                    "https://dpaste.com/api/", data=data, headers=DPASTE_HEADERS
                 )
                 res.raise_for_status()
-                url = res.text.rstrip("\n") + "/raw"
+                url = res.text.rstrip("\n") + ".txt"
+                expiry = round(time.time() + (60 * 60 * 24 * 365))  # one year from now
+                expiryTimestamp = f"<t:{expiry}:R>"
 
                 renderStart = time.time()
                 renderTask = asyncio.create_task(render(saveString, message.id))
@@ -377,7 +391,7 @@ async def on_message(message):
                 embed.add_field(
                     name="Raw size", value=str(len(saveString)), inline=True
                 )
-                embed.add_field(name="Link", value=url)
+                embed.add_field(name=f"Link (expires {expiryTimestamp})", value=url)
                 embed.set_image(url="attachment://preview.gif")
 
                 totalTime = round((time.time() - totalStart) * 1000, 1)
@@ -411,18 +425,21 @@ async def on_message(message):
                 return
             if re.match(saveRegex, fileString):
                 saveString = fileString
-                headers = {"User-Agent": "Mozilla/5.0"}
-                payload = {"lexer": "_text", "format": "url", "content": saveString}
+                data = {"content": saveString, "syntax": "text", "expiry_days": 365}
 
                 renderingMessage = await message.reply(
                     "Rendering save...", mention_author=False
                 )
                 try:
                     res = requests.post(
-                        "https://dpaste.org/api/", headers=headers, data=payload
+                        "https://dpaste.com/api/", data=data, headers=DPASTE_HEADERS
                     )
                     res.raise_for_status()
                     url = res.text.rstrip("\n") + "/raw"
+                    expiry = round(
+                        time.time() + (60 * 60 * 24 * 365)
+                    )  # one year from now
+                    expiryTimestamp = f"<t:{expiry}:R>"
 
                     renderStart = time.time()
                     renderTask = asyncio.create_task(render(saveString, message.id))
@@ -442,7 +459,7 @@ async def on_message(message):
                     embed.add_field(
                         name="Raw size", value=str(len(saveString)), inline=True
                     )
-                    embed.add_field(name="Link", value=url)
+                    embed.add_field(name="Link (expires {expiryTimestamp}", value=url)
                     embed.set_image(url="attachment://preview.gif")
 
                     totalTime = round((time.time() - totalStart) * 1000, 1)

@@ -461,7 +461,7 @@ async def on_message(message):
                     embed.add_field(
                         name="Raw size", value=str(len(saveString)), inline=True
                     )
-                    embed.add_field(name=f"Link (expires {expiryTimestamp}", value=url)
+                    embed.add_field(name=f"Link (expires {expiryTimestamp})", value=url)
                     embed.set_image(url="attachment://preview.gif")
 
                     totalTime = round((time.time() - totalStart) * 1000, 1)

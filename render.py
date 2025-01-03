@@ -7,11 +7,16 @@ from PIL import Image, ImageDraw, ImageFont
 import random
 import asyncio
 from transparentGifWorkaround import save_transparent_gif
+from progress import progress
 
 MAX_TIME = 120
 
+PROGRESS_UPDATE_RATE = 1.5
 
-async def render(saveString, messageId):
+PROGRESS_LENGTH = 15
+
+
+async def render(saveString, messageId, progressMessage):
     def project(points, rot):
         a = math.asin(math.tan(math.radians(30)))
         b = math.radians(rot)
@@ -71,6 +76,19 @@ async def render(saveString, messageId):
 
         textIm = textIm.transform(size, Image.PERSPECTIVE, coeffs, Image.BICUBIC)
         return textIm
+
+    async def updateProgress(msg, percentage, eta):
+        bar = progress(percentage, PROGRESS_LENGTH)
+        if eta == None:
+            eta = "Calculating"
+        elif eta < 5:
+            eta = "A few seconds"
+        else:
+            eta = f"{round(eta)} seconds"
+
+        await msg.edit(
+            content=f"Rendering save... `{bar}` {percentage * 100:.2f}%. ETA: {eta}."
+        )
 
     def drawBlock(b, p):
         if b.state == True:
@@ -218,6 +236,10 @@ async def render(saveString, messageId):
             bounds = tmpBounds
 
     frames = []
+    renderProgress = 0
+    lastProgressUpdate = 0
+
+    etaStartTime = time.time()
 
     for i in range(0, 36):
         projectedPoints = projectedPointsList[i]
@@ -245,7 +267,7 @@ async def render(saveString, messageId):
             (98, 24, 148),
             (235, 233, 183),
             (52, 132, 182),
-            (255, 255, 255)
+            (255, 255, 255),
         ]
 
         interPoints = project(points, angle)
@@ -272,13 +294,27 @@ async def render(saveString, messageId):
         im = Image.new("RGBA", (size[0], size[1]), color=(0, 0, 0, 0))
         draw = ImageDraw.Draw(im)
 
-        for i in range(len(projectedPoints)):
-            b = sortedBlocks[i]
-            p = projectedPoints[i]
+        for blockIndex in range(len(projectedPoints)):
+            b = sortedBlocks[blockIndex]
+            p = projectedPoints[blockIndex]
             drawBlock(b, p)
 
-            if time.time() - startTime >= MAX_TIME:
+            renderProgress = (blockIndex / len(projectedPoints)) / 36 + i / 36
+
+            currentTime = time.time()
+
+            if currentTime - startTime >= MAX_TIME:
                 return False, None, None
+
+            if currentTime - lastProgressUpdate >= PROGRESS_UPDATE_RATE:
+                if renderProgress == 0:
+                    eta = None
+                else:
+                    eta = (currentTime - etaStartTime) / renderProgress - (
+                        currentTime - etaStartTime
+                    )
+                await updateProgress(progressMessage, renderProgress, eta)
+                lastProgressUpdate = currentTime
 
         frames.append(im)
 

@@ -313,7 +313,9 @@ async def on_message(message):
             )
 
             renderStart = time.time()
-            renderTask = asyncio.create_task(render(saveString, message.id))
+            renderTask = asyncio.create_task(
+                render(saveString, message.id, renderingMessage)
+            )
             success, renderedImage, save = await renderTask
             if not success:
                 await message.reply(
@@ -374,7 +376,9 @@ async def on_message(message):
                 expiryTimestamp = f"<t:{expiry}:R>"
 
                 renderStart = time.time()
-                renderTask = asyncio.create_task(render(saveString, message.id))
+                renderTask = asyncio.create_task(
+                    render(saveString, message.id, renderingMessage)
+                )
                 success, renderedImage, save = await renderTask
                 if not success:
                     await message.reply(
@@ -442,7 +446,9 @@ async def on_message(message):
                     expiryTimestamp = f"<t:{expiry}:R>"
 
                     renderStart = time.time()
-                    renderTask = asyncio.create_task(render(saveString, message.id))
+                    renderTask = asyncio.create_task(
+                        render(saveString, message.id, renderingMessage)
+                    )
                     success, renderedImage, save = await renderTask
                     if not success:
                         await message.reply(

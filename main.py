@@ -293,7 +293,7 @@ async def on_message(message):
     if messageHasLink:
         try:
             url = messageHasLink.group(0)
-            if "/raw" not in url:
+            if "/raw" not in url and ".txt" not in url:
                 if "dpaste.org" in url:
                     url += "/raw"
                 elif "dpaste.com" in url:
@@ -435,7 +435,7 @@ async def on_message(message):
                         "https://dpaste.com/api/", data=data, headers=DPASTE_HEADERS
                     )
                     res.raise_for_status()
-                    url = res.text.rstrip("\n") + "/raw"
+                    url = res.text.rstrip("\n") + ".txt"
                     expiry = round(
                         time.time() + (60 * 60 * 24 * 365)
                     )  # one year from now

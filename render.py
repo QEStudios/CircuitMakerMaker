@@ -103,13 +103,13 @@ async def render(saveString, messageId, progressMessage):
             and len(b.properties) == 3
         ):
             blockColour = tuple([int(v) for v in b.properties])
-        if b.blockId == cm2.LED and b.state == False:
-            imMask = Image.new("RGBA", size)
-            thisDraw = ImageDraw.Draw(imMask)
-            transparency = [127]
-        else:
-            thisDraw = draw
-            transparency = []
+        # if b.blockId == cm2.LED and b.state == False:
+        #     imMask = Image.new("RGBA", size)
+        #     thisDraw = ImageDraw.Draw(imMask)
+        #     transparency = [127]
+        # else:
+        thisDraw = draw
+        transparency = []
 
         x = p[0] * scale + size[0] / 2
         y = p[1] * scale + size[1] / 2
@@ -151,8 +151,8 @@ async def render(saveString, messageId, progressMessage):
         #     pCube[2],
         #     pCube[3]], fill=0, width=int(scale/8), joint="curve")
 
-        if b.blockId == cm2.LED and b.state == False:
-            im.alpha_composite(imMask, (0, 0))
+        # if b.blockId == cm2.LED and b.state == False:
+        #     im.alpha_composite(imMask, (0, 0))
 
         # if b.blockId == cm2.TEXT:
         #     if b.properties:

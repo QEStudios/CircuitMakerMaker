@@ -318,7 +318,7 @@ async def on_message(message):
             )
             success, renderedImage, save = await renderTask
             if not success:
-                await message.reply(
+                await renderingMessage.edit(
                     f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds."
                 )
                 return
@@ -336,12 +336,10 @@ async def on_message(message):
                 text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms."
             )
 
-            await renderingMessage.delete()
-            await message.reply(
+            await renderingMessage.edit(
                 "Here's a preview of that save!",
                 file=previewFile,
                 embed=embed,
-                mention_author=False,
             )
             os.remove(renderedImage)
         except Exception as e:
@@ -381,7 +379,7 @@ async def on_message(message):
                 )
                 success, renderedImage, save = await renderTask
                 if not success:
-                    await message.reply(
+                    await renderingMessage.edit(
                         f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds."
                     )
                     return
@@ -403,12 +401,10 @@ async def on_message(message):
                     text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms."
                 )
 
-                await renderingMessage.delete()
-                await message.reply(
+                await renderingMessage.edit(
                     f"Here's a preview of that save!",
                     file=previewFile,
                     embed=embed,
-                    mention_author=False,
                 )
                 os.remove(renderedImage)
             except Exception as e:
@@ -451,7 +447,7 @@ async def on_message(message):
                     )
                     success, renderedImage, save = await renderTask
                     if not success:
-                        await message.reply(
+                        await renderingMessage.edit(
                             f"Sorry, I couldn't render a preview for that save! The render took longer than 120 seconds."
                         )
                         return
@@ -473,12 +469,10 @@ async def on_message(message):
                         text=f"Preview took {renderTime} ms to render, total response time {totalTime} ms."
                     )
 
-                    await renderingMessage.delete()
-                    await message.reply(
+                    await renderingMessage.edit(
                         f"Here's a preview of that save!",
                         file=previewFile,
                         embed=embed,
-                        mention_author=False,
                     )
                     os.remove(renderedImage)
                 except Exception as e:

@@ -7,3 +7,4 @@ python-dotenv
 feedparser
 pytubefix
 ffmpeg-python
+pytz

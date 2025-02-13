@@ -18,6 +18,8 @@ import ffmpeg
 from pytubefix import YouTube
 from PIL import Image
 import subprocess
+from datetime import datetime
+import pytz
 
 load_dotenv()
 
@@ -34,6 +36,8 @@ youtube_channels = [
     "UCUdeaj2BNwbM3qa-u705a4w",  # Today's Number
     "UCU5Cd2fKEvidHzxjj4UIiug",  # Are Things Swell
 ]
+
+melbourne_tz = pytz.timezone("Australia/Melbourne")
 
 intents = discord.Intents.all()
 
@@ -109,24 +113,8 @@ async def uwuify(ctx, message: str):
 @bot.slash_command(description="See what time it is for skm")
 async def skmtime(ctx):
     await ctx.defer()
-    res = requests.get(
-        "https://timeapi.io/api/Time/current/zone?timeZone=Australia/Melbourne"
-    )
-    if res.status_code != 200:
-        await ctx.respond(
-            "There was an error contacting `timeapi.io`. Please try again in a few minutes.",
-            ephemeral=True,
-        )
-        return
-    resJson = json.loads(res.text)
-    modTime = resJson["time"]
-    modTime = (int(modTime.split(":")[0]) - 1) % 12 + 1
-    if int(resJson["time"].split(":")[0]) > 11:
-        amPm = "PM"
-    else:
-        amPm = "AM"
-    minutes = resJson["time"].split(":")[1]
-    formatted_time = f"{modTime:02}:{minutes} {amPm}"
+    melbourne_time = datetime.now(melbourne_tz)
+    formatted_time = melbourne_time.strftime("%I:%M %p")
     await ctx.respond(f"Current time for skm: {formatted_time}.")
 
 

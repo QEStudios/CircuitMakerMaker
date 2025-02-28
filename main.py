@@ -585,7 +585,7 @@ async def check_rss_feed():
 
 
 def main():
-    bot.loop.create_task(check_rss_feed())
+    # bot.loop.create_task(check_rss_feed())
     bot.run(TOKEN)
 
 

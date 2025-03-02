@@ -146,7 +146,7 @@ async def randomgame(ctx, skipdefaultplace: bool, maxattempts: int):
 
     if skipdefaultplace == True:
         searching_message = await ctx.respond(
-            "Searching for a game which isn't a default place, please wait...",
+            "Searching for a game which isn't a default place, please wait... (this may take a while)",
         )
     else:
         searching_message = await ctx.respond("Searching, please wait...")
@@ -181,7 +181,7 @@ async def randomgame(ctx, skipdefaultplace: bool, maxattempts: int):
                 description and "Roblox Studio" in description
             ):
                 await searching_message.edit(
-                    f"Searching for a game which isn't a default place, please wait... [{search_attempts}/{maxattempts}]"
+                    f"Searching for a game which isn't a default place, please wait... (this may take a while) [{search_attempts}/{maxattempts}]"
                 )
                 await asyncio.sleep(1)
                 continue

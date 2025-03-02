@@ -10,6 +10,7 @@ import io
 import traceback
 import regex as re
 import requests
+import aiohttp
 import time
 import asyncio
 import json
@@ -58,8 +59,15 @@ async def getuser(ctx, username: str):
     await ctx.defer()
     userUrl = "https://users.roblox.com/v1/usernames/users"
     payload = {"usernames": [username], "excludeBannedUsers": True}
-    res = requests.post(userUrl, json=payload)
-    resJson = res.json()
+    async with aiohttp.ClientSession() as session:
+        async with session.post(userUrl, json=payload) as res:
+            if res.status != 200:
+                await ctx.respond(
+                    "There was an error contacting Roblox API. Please try again later.",
+                    ephemeral=True,
+                )
+                return
+            resJson = await res.json()
     if len(resJson["data"]) == 0:
         await ctx.respond("Invalid username.", ephemeral=True)
     userId = resJson["data"][0]["id"]
@@ -119,26 +127,114 @@ async def skmtime(ctx):
 
 
 @bot.slash_command(description="Find a random roblox game")
-async def randomgame(ctx):
+@option(
+    "skipdefaultplace",
+    description="Try to search for a game which isn't a default place (may take a while)",
+    default=False,
+    required=False,
+)
+@option(
+    "maxattempts",
+    description="Max number of search attempts when using skipdefaultplace",
+    min_value=1,
+    max_value=100,
+    default=20,
+    required=False,
+)
+async def randomgame(ctx, skipdefaultplace: bool, maxattempts: int):
     await ctx.defer()
-    res = requests.get(
-        "https://random-roblox-game.vercel.app/api/get-random?popular=no"
-    )
-    if res.status_code != 200:
-        await ctx.respond(
-            "There was an error contacting `random-roblox-game.vercel.app`. Please try again in a few minutes.",
-            ephemeral=True,
+
+    if skipdefaultplace == True:
+        searching_message = await ctx.respond(
+            "Searching for a game which isn't a default place, please wait...",
         )
-        return
-    resJson = json.loads(res.text)
-    name = resJson["name"]
-    creatorName = resJson["creatorName"]
-    description = resJson["desc"]
+    else:
+        searching_message = await ctx.respond("Searching, please wait...")
+
+    search_attempts = 0
+    found = False
+    while found == False:
+        search_attempts += 1
+        if search_attempts >= maxattempts:
+            await searching_message.edit(
+                "Couldn't find a game which isn't a default place. Run the command again to try another search.",
+            )
+            return
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                "https://random-roblox-game.vercel.app/api/get-random?popular=no"
+            ) as res:
+                if res.status != 200:
+                    await searching_message.edit(
+                        "There was an error contacting `random-roblox-game.vercel.app`. Please try again in a few minutes.",
+                    )
+                    return
+                resJson = await res.json()
+                name = resJson["name"]
+                description = resJson["desc"]
+                creatorName = resJson["creator"]["name"]
+
+        if skipdefaultplace == True:
+            print(f"Search attempt {search_attempts}", end="")
+            if (creatorName in name) or (
+                description and "Roblox Studio" in description
+            ):
+                await searching_message.edit(
+                    f"Searching for a game which isn't a default place, please wait... [{search_attempts}/{maxattempts}]"
+                )
+                await asyncio.sleep(1)
+                continue
+            else:
+                found = True
+        found = True
+
+    creatorId = resJson["creator"]["id"]
     image = resJson["image"]
     placeId = resJson["placeId"]
-    await ctx.respond(
-        f"Random roblox game:\n**{name}** by {creatorName}\n<https://www.roblox.com/games/{placeId}>"
+    timestamp = resJson["updated"].replace("Z", "")
+    timestamp = timestamp.split(".")[0] + "." + timestamp.split(".")[1].ljust(3, "0")
+
+    check_count = 0
+    pending = True
+    while pending:
+        check_count += 1
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds={creatorId}&size=420x420&format=Png&isCircular=false"
+            ) as headshot_req:
+                headshot_json = await headshot_req.json()
+                if check_count >= 5:
+                    break
+                if headshot_json["data"][0]["state"] == "Completed":
+                    pending = False
+                    break
+                await asyncio.sleep(1)
+
+    if pending == False:
+        headshot_url = headshot_json["data"][0]["imageUrl"]
+    else:
+        headshot_url = ""
+
+    embed = (
+        discord.Embed(
+            url=f"https://www.roblox.com/games/{placeId}",
+            title=name,
+            description=description,
+            timestamp=datetime.fromisoformat(timestamp),
+        )
+        .set_author(
+            name=creatorName,
+            url=f"https://www.roblox.com/users/{creatorId}",
+            icon_url=headshot_url,
+        )
+        .set_thumbnail(url=image)
+        .set_footer(
+            text="Last updated",
+        )
     )
+
+    await searching_message.edit("Random roblox game:", embed=embed)
 
 
 @generateCommand.command(
@@ -288,7 +384,9 @@ async def on_message(message):
                     url += ".txt"
                 else:  # pastebin
                     url = url.split("com/")[0] + "com/raw/" + url.split("com/")[1]
-            saveString = requests.get(url).text
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    saveString = await response.text()
             if len(saveString) > maxSize:
                 await message.reply(
                     f"Sorry, I can't render a preview for that save, it's over {maxSize//1000} KiB!",

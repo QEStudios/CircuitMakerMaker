@@ -176,7 +176,6 @@ async def randomgame(ctx, skipdefaultplace: bool, maxattempts: int):
                 creatorName = resJson["creator"]["name"]
 
         if skipdefaultplace == True:
-            print(f"Search attempt {search_attempts}", end="")
             if (creatorName.lower() in name.lower()) or (
                 description and "roblox studio" in description.lower()
             ):

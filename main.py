@@ -177,8 +177,8 @@ async def randomgame(ctx, skipdefaultplace: bool, maxattempts: int):
 
         if skipdefaultplace == True:
             print(f"Search attempt {search_attempts}", end="")
-            if (creatorName in name) or (
-                description and "Roblox Studio" in description
+            if (creatorName.lower() in name.lower()) or (
+                description and "roblox studio" in description.lower()
             ):
                 await searching_message.edit(
                     f"Searching for a game which isn't a default place, please wait... (this may take a while) [{search_attempts}/{maxattempts}]"

@@ -166,3 +166,5 @@ pid.txt
 audio
 video
 output.mp4
+video_to_transcode.wmv
+transcoded_video.mp4

@@ -397,6 +397,8 @@ async def on_message(message):
                 "Rendering save...", mention_author=False
             )
 
+            print(saveString)
+
             renderStart = time.time()
             renderTask = asyncio.create_task(
                 render(saveString, message.id, renderingMessage)

@@ -451,7 +451,7 @@ async def on_message(message):
             )
             try:
                 res = requests.post(
-                    "https://dpaste.com/api/", data=data, headers=DPASTE_HEADERS
+                    "https://dpaste.com/api/v2/", data=data, headers=DPASTE_HEADERS
                 )
                 res.raise_for_status()
                 url = res.text.rstrip("\n") + ".txt"
@@ -531,7 +531,7 @@ async def on_message(message):
                 )
                 try:
                     res = requests.post(
-                        "https://dpaste.com/api/", data=data, headers=DPASTE_HEADERS
+                        "https://dpaste.com/api/v2/", data=data, headers=DPASTE_HEADERS
                     )
                     res.raise_for_status()
                     url = res.text.rstrip("\n") + ".txt"

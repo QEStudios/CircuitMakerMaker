@@ -374,6 +374,7 @@ async def on_message(message):
 
     messageHasLink = re.search(linkRegex, message.content)
     if messageHasLink:
+        return
         try:
             url = messageHasLink.group(0)
             if "/raw" not in url and ".txt" not in url:
@@ -452,13 +453,13 @@ async def on_message(message):
                 "Rendering save...", mention_author=False
             )
             try:
-                res = requests.post(
-                    "https://dpaste.com/api/v2/", data=data, headers=DPASTE_HEADERS
-                )
-                res.raise_for_status()
-                url = res.text.rstrip("\n") + ".txt"
-                expiry = round(time.time() + (60 * 60 * 24 * 365))  # one year from now
-                expiryTimestamp = f"<t:{expiry}:R>"
+                # res = requests.post(
+                #     "https://dpaste.com/api/v2/", data=data, headers=DPASTE_HEADERS
+                # )
+                # res.raise_for_status()
+                # url = res.text.rstrip("\n") + ".txt"
+                # expiry = round(time.time() + (60 * 60 * 24 * 365))  # one year from now
+                # expiryTimestamp = f"<t:{expiry}:R>"
 
                 renderStart = time.time()
                 renderTask = asyncio.create_task(
@@ -480,7 +481,7 @@ async def on_message(message):
                 embed.add_field(
                     name="Raw size", value=str(len(saveString)), inline=True
                 )
-                embed.add_field(name=f"Link (expires {expiryTimestamp})", value=url)
+                # embed.add_field(name=f"Link (expires {expiryTimestamp})", value=url)
                 embed.set_image(url="attachment://preview.gif")
 
                 totalTime = round((time.time() - totalStart) * 1000, 1)
@@ -532,15 +533,15 @@ async def on_message(message):
                     "Rendering save...", mention_author=False
                 )
                 try:
-                    res = requests.post(
-                        "https://dpaste.com/api/v2/", data=data, headers=DPASTE_HEADERS
-                    )
-                    res.raise_for_status()
-                    url = res.text.rstrip("\n") + ".txt"
-                    expiry = round(
-                        time.time() + (60 * 60 * 24 * 365)
-                    )  # one year from now
-                    expiryTimestamp = f"<t:{expiry}:R>"
+                    # res = requests.post(
+                    #     "https://dpaste.com/api/v2/", data=data, headers=DPASTE_HEADERS
+                    # )
+                    # res.raise_for_status()
+                    # url = res.text.rstrip("\n") + ".txt"
+                    # expiry = round(
+                    #     time.time() + (60 * 60 * 24 * 365)
+                    # )  # one year from now
+                    # expiryTimestamp = f"<t:{expiry}:R>"
 
                     renderStart = time.time()
                     renderTask = asyncio.create_task(
@@ -562,7 +563,7 @@ async def on_message(message):
                     embed.add_field(
                         name="Raw size", value=str(len(saveString)), inline=True
                     )
-                    embed.add_field(name=f"Link (expires {expiryTimestamp})", value=url)
+                    # embed.add_field(name=f"Link (expires {expiryTimestamp})", value=url)
                     embed.set_image(url="attachment://preview.gif")
 
                     totalTime = round((time.time() - totalStart) * 1000, 1)

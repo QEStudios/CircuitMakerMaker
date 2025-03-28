@@ -504,18 +504,19 @@ async def on_message(message):
                 )
         elif len(message.attachments) > 0:
             file = message.attachments[0]
-            if message.attachments[0].content_type == "video/x-ms-wmv": # Check if it's a roblox recording that needs to be re-encoded
+            if message.attachments[0].content_type in ["video/x-ms-wmv", "video/x-matroska"]: # Check if it's a video that needs to be re-encoded
                 if file.size > 8_000_000: # max 8mb
                     return
                 print("VIDEO TO TRANSCODE FOUND!!!!!")
-                await message.attachments[0].save("video_to_transcode.wmv")
-                i = ffmpeg.input("video_to_transcode.wmv")
+                replied_msg = await message.reply("Looks like you sent a video file which won't play correctly in discord!\nI'm transcoding it right now...")
+                await message.attachments[0].save("video_to_transcode")
+                i = ffmpeg.input("video_to_transcode")
                 ffmpeg.output(
                     i,
                     "transcoded_video.mp4",
                 ).overwrite_output().run()
                 file = discord.File(fp="transcoded_video.mp4", filename="transcoded.mp4")
-                await message.reply("Looks like you sent a video file which won't play correctly in discord!\nI've transcoded it so it plays correctly:", file=file)
+                await replied_msg.edit("Looks like you sent a video file which won't play correctly in discord!\nI've transcoded it so it plays correctly:", file=file)
                 return
 
             if file.size > maxSize:

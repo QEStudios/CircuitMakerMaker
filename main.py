@@ -39,6 +39,7 @@ youtube_channels = [
 ]
 
 melbourne_tz = pytz.timezone("Australia/Melbourne")
+us_pacific_tz = pytz.timezone("US/Pacific")
 
 intents = discord.Intents.all()
 
@@ -124,6 +125,13 @@ async def skmtime(ctx):
     melbourne_time = datetime.now(melbourne_tz)
     formatted_time = melbourne_time.strftime("%I:%M %p")
     await ctx.respond(f"Current time for skm: {formatted_time}.")
+
+@bot.slash_command(description="See what time it is for chris")
+async def christime(ctx):
+    await ctx.defer()
+    us_pacific_time = datetime.now(us_pacific_tz)
+    formatted_time = us_pacific_time.strftime("%I:%M %p")
+    await ctx.respond(f"Current time for chris: {formatted_time}.")
 
 
 @bot.slash_command(description="Find a random roblox game")

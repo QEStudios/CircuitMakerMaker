@@ -311,6 +311,29 @@ async def image(ctx, image: discord.Attachment, size: int, transparency: bool):
 
 
 @bot.event
+async def on_member_update(before: discord.Member, after: discord.Member):
+    VERIFIED_ROLE_ID = 1371954252066455644  # "Verified" role
+    MEMBER_ROLE_ID = 1187660289404055653  # "Maker of Circuits" role
+
+    verifiedRole = discord.utils.get(after.guild.roles, id=VERIFIED_ROLE_ID)
+    memberRole = discord.utils.get(after.guild.roles, id=MEMBER_ROLE_ID)
+
+    if not verifiedRole or not memberRole:
+        print("Verified or Maker of Circuits role not found!")
+        return
+
+    if verifiedRole not in before.roles and verifiedRole in after.roles:
+        # Verified role was added
+        if memberRole not in after.roles:
+            try:
+                await after.add_roles(memberRole)
+            except discord.Forbidden:
+                print("Missing permissions to add role")
+            except discord.HTTPException as e:
+                print(f"Failed to add role: {e}")
+
+
+@bot.event
 async def on_message(message):
     totalStart = time.time()
     if message.author == bot.user:
@@ -603,6 +626,7 @@ async def on_message(message):
                     await message.reply(
                         f"Sorry, I couldn't render a preview for that save! Here's the error: {e}\n\n{traceback.format_exc()}"
                     )
+
 
 # thanks https://stackoverflow.com/a/64439347
 def compress_video(video_full_path, output_file_name, target_size):

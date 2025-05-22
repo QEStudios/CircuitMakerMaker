@@ -126,6 +126,7 @@ async def skmtime(ctx):
     formatted_time = melbourne_time.strftime("%I:%M %p")
     await ctx.respond(f"Current time for skm: {formatted_time}.")
 
+
 @bot.slash_command(description="See what time it is for chris")
 async def christime(ctx):
     await ctx.defer()
@@ -322,15 +323,18 @@ async def on_member_update(before: discord.Member, after: discord.Member):
         print("Verified or Maker of Circuits role not found!")
         return
 
-    if verifiedRole not in before.roles and verifiedRole in after.roles:
-        # Verified role was added
-        if memberRole not in after.roles:
-            try:
-                await after.add_roles(memberRole)
-            except discord.Forbidden:
-                print("Missing permissions to add role")
-            except discord.HTTPException as e:
-                print(f"Failed to add role: {e}")
+    has_verified = verifiedRole in after.roles
+    has_member = memberRole in after.roles
+
+    try:
+        if has_verified and not has_member:
+            await after.add_roles(memberRole)
+        elif not has_verified and has_member:
+            await after.remove_roles(memberRole)
+    except discord.Forbidden:
+        print("Missing permissions to modify roles")
+    except discord.HTTPException as e:
+        print(f"Failed to modify roles: {e}")
 
 
 @bot.event

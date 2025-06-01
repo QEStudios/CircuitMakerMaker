@@ -315,7 +315,7 @@ async def image(ctx, image: discord.Attachment, size: int, transparency: bool):
 
 @bot.event
 async def on_member_update(before: discord.Member, after: discord.Member):
-    if member.guild.id != CM2_GUILD_ID:
+    if before.guild.id != CM2_GUILD_ID:
         return
 
     VERIFIED_ROLE_ID = 1371954252066455644  # "Verified" role

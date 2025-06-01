@@ -345,7 +345,6 @@ async def on_member_update(before: discord.Member, after: discord.Member):
 @bot.event
 async def on_member_join(member: discord.Member):
     if member.guild.id != CM2_GUILD_ID:
-        print("MEMBER NOT IN GUILD - ???")
         return
 
     VERIFIED_ROLE_ID = 1371954252066455644  # "Verified" role
@@ -356,13 +355,10 @@ async def on_member_join(member: discord.Member):
 
     has_valid_role = any(role.id in VALID_ROLE_IDS for role in member.roles)
 
-    print(f"HAS VALID ROLE: {has_valid_role}")
-
     if not has_valid_role:
         unverified_role = discord.utils.get(member.guild.roles, id=UNVERIFIED_ROLE_ID)
         if unverified_role:
             try:
-                print("TRY TO GIVE ROLE!!!!!")
                 await member.add_roles(
                     unverified_role,
                     reason="Bloxlink failed to give role; assigned fallback Unverified role.",

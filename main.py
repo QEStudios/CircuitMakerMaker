@@ -342,6 +342,7 @@ async def on_member_update(before: discord.Member, after: discord.Member):
         print(f"Failed to modify roles: {e}")
 
 
+@bot.event
 async def on_member_join(member: discord.Member):
     if member.guild.id != CM2_GUILD_ID:
         print("MEMBER NOT IN GUILD - ???")

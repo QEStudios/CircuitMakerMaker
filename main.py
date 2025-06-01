@@ -342,6 +342,34 @@ async def on_member_update(before: discord.Member, after: discord.Member):
         print(f"Failed to modify roles: {e}")
 
 
+async def on_member_join(member: discord.Member):
+    if member.guild.id != CM2_GUILD_ID:
+        return
+
+    VERIFIED_ROLE_ID = 1371954252066455644  # "Verified" role
+    UNVERIFIED_ROLE_ID = 1371670397451239494  # "Unverified" role
+    VALID_ROLE_IDS = [VERIFIED_ROLE_ID, UNVERIFIED_ROLE_ID]
+
+    await asyncio.sleep(5)
+
+    has_valid_role = any(role.id in VALID_ROLE_IDS for role in member.roles)
+
+    if not has_valid_role:
+        unverified_role = member.guild.get_role(UNVERIFIED_ROLE_ID)
+        if unverified_role:
+            try:
+                await member.add_roles(
+                    unverified_role,
+                    reason="Bloxlink failed to give role; assigned fallback Unverified role.",
+                )
+            except discord.Forbidden:
+                print(f"Missing permissions to assign role to {member}")
+            except discord.HTTPException as e:
+                print(f"Failed to assign role to {member}: {e}")
+        else:
+            print("Unverified role not found in guild.")
+
+
 @bot.event
 async def on_message(message):
     totalStart = time.time()

@@ -38,6 +38,8 @@ youtube_channels = [
     "UCU5Cd2fKEvidHzxjj4UIiug",  # Are Things Swell
 ]
 
+CM2_GUILD_ID = 956406294263242792
+
 melbourne_tz = pytz.timezone("Australia/Melbourne")
 us_pacific_tz = pytz.timezone("US/Pacific")
 
@@ -313,6 +315,9 @@ async def image(ctx, image: discord.Attachment, size: int, transparency: bool):
 
 @bot.event
 async def on_member_update(before: discord.Member, after: discord.Member):
+    if member.guild.id != CM2_GUILD_ID:
+        return
+
     VERIFIED_ROLE_ID = 1371954252066455644  # "Verified" role
     MEMBER_ROLE_ID = 1187660289404055653  # "Maker of Circuits" role
 

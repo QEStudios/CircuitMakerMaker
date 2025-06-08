@@ -319,19 +319,24 @@ async def on_member_update(before: discord.Member, after: discord.Member):
         return
 
     VERIFIED_ROLE_ID = 1371954252066455644  # "Verified" role
+    UNVERIFIED_ROLE_ID = 1371670397451239494  # "Unverified" role
     MEMBER_ROLE_ID = 1187660289404055653  # "Maker of Circuits" role
 
     verifiedRole = discord.utils.get(after.guild.roles, id=VERIFIED_ROLE_ID)
+    unverifiedRole = discord.utils.get(after.guild.roles, id=UNVERIFIED_ROLE_ID)
     memberRole = discord.utils.get(after.guild.roles, id=MEMBER_ROLE_ID)
 
-    if not verifiedRole or not memberRole:
-        print("Verified or Maker of Circuits role not found!")
+    if not verifiedRole or not unverifiedRole or not memberRole:
+        print("Verified, Unverified or Maker of Circuits role not found!")
         return
 
     has_verified = verifiedRole in after.roles
+    has_unverified = unverifiedRole in after.roles
     has_member = memberRole in after.roles
 
     try:
+        if has_verified and has_unverified:
+            await after.remove_roles(unverifiedRole)
         if has_verified and not has_member:
             await after.add_roles(memberRole)
         elif not has_verified and has_member:

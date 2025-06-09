@@ -137,6 +137,79 @@ async def christime(ctx):
     await ctx.respond(f"Current time for chris: {formatted_time}.")
 
 
+lockdownCommand = bot.create_group(
+    "lockdown", "Lockdown certain aspects of the server."
+)
+
+lockdownReleaseCommand = lockdownCommand.create_subgroup(
+    "release", "Release a lockdown."
+)
+
+
+@lockdownCommand.command(
+    name="images", description="Disable all images, gifs, and embeds for members"
+)
+@commands.has_guild_permissions(administrator=True)
+async def lockdown_images(ctx):
+    await ctx.defer()
+
+    if ctx.guild.id != 956406294263242792:
+        await ctx.respond("This command cannot be used in this server.", ephemeral=True)
+        return
+
+    IMAGE_PERMS_ROLE = 1376800882103943259
+    image_perms = discord.utils.get(ctx.guild.roles, id=IMAGE_PERMS_ROLE)
+    if not image_perms:
+        await ctx.respond(
+            "There was an error finding the Image Perms role.", ephemeral=True
+        )
+        return
+
+    permissions = image_perms.permissions
+    permissions.update(embed_links=False, attach_files=False)
+    await image_perms.edit(
+        reason=f"{ctx.user.name} used /lockdown images. Use /lockdown release images to undo this.",
+        permissions=permissions,
+    )
+
+    await ctx.respond(
+        "All images, gifs, and embeds have been disabled.\nUse /lockdown release images to undo this.",
+        ephemeral=True,
+    )
+
+
+@lockdownReleaseCommand.command(
+    name="images", description="Release the images lockdown"
+)
+@commands.has_guild_permissions(administrator=True)
+async def lockdown_release_images(ctx):
+    await ctx.defer()
+
+    if ctx.guild.id != 956406294263242792:
+        await ctx.respond("This command cannot be used in this server.", ephemeral=True)
+        return
+
+    IMAGE_PERMS_ROLE = 1376800882103943259
+    image_perms = discord.utils.get(ctx.guild.roles, id=IMAGE_PERMS_ROLE)
+    if not image_perms:
+        await ctx.respond(
+            "There was an error finding the Image Perms role.", ephemeral=True
+        )
+        return
+
+    permissions = image_perms.permissions
+    permissions.update(embed_links=True, attach_files=True)
+    await image_perms.edit(
+        reason=f"{ctx.user.name} used /lockdown release images. Use /lockdown images to re-lockdown this.",
+        permissions=permissions,
+    )
+
+    await ctx.respond(
+        "All images, gifs, and embeds have been re-enabled.\nUse /lockdown images to re-lockdown this.",
+        ephemeral=True,
+    )
+
+
 @bot.slash_command(description="Find a random roblox game")
 @option(
     "skipdefaultplace",

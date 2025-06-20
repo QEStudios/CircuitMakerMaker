@@ -521,7 +521,6 @@ async def on_message(message):
 
     messageHasLink = re.search(linkRegex, message.content)
     if messageHasLink:
-        return
         try:
             url = messageHasLink.group(0)
             if "/raw" not in url and ".txt" not in url:
@@ -544,8 +543,6 @@ async def on_message(message):
             renderingMessage = await message.reply(
                 "Rendering save...", mention_author=False
             )
-
-            print(saveString)
 
             renderStart = time.time()
             renderTask = asyncio.create_task(

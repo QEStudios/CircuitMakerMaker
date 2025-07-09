@@ -100,7 +100,7 @@ async def render(saveString, messageId, progressMessage):
         if (
             (b.blockId == cm2.LED or b.blockId == cm2.TILE)
             and b.properties
-            and len(b.properties) == 3
+            and len(b.properties) >= 3
         ):
             blockColour = tuple([int(v) for v in b.properties])
         # if b.blockId == cm2.LED and b.state == False:

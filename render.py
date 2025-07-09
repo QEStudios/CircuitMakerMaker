@@ -102,7 +102,7 @@ async def render(saveString, messageId, progressMessage):
             and b.properties
             and len(b.properties) >= 3
         ):
-            blockColour = tuple([int(v) for v in b.properties])
+            blockColour = tuple([int(v) for v in b.properties[:3]])
         # if b.blockId == cm2.LED and b.state == False:
         #     imMask = Image.new("RGBA", size)
         #     thisDraw = ImageDraw.Draw(imMask)

@@ -123,9 +123,6 @@ async def uwuify(ctx, message: str):
 
 @bot.slash_command(description="See what time it is for skm")
 async def skmtime(ctx):
-    await ctx.respond("Current time for skm: who even cares anymore?")
-    return
-
     await ctx.defer()
     melbourne_time = datetime.now(melbourne_tz)
     formatted_time = melbourne_time.strftime("%I:%M %p")

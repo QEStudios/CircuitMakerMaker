@@ -11,6 +11,7 @@ import traceback
 import regex as re
 import requests
 import aiohttp
+import ssl
 import time
 import asyncio
 import json
@@ -43,6 +44,8 @@ CM2_GUILD_ID = 956406294263242792
 melbourne_tz = pytz.timezone("Australia/Melbourne")
 us_pacific_tz = pytz.timezone("US/Pacific")
 
+ssl_context = ssl.create_default_context()
+
 intents = discord.Intents.all()
 
 bot = discord.Bot(intents=intents)
@@ -62,6 +65,8 @@ async def getuser(ctx, username: str):
     await ctx.defer()
     userUrl = "https://users.roblox.com/v1/usernames/users"
     payload = {"usernames": [username], "excludeBannedUsers": True}
+
+    aiohttp.TCPConnector.__init__.__kwdefaults__["ssl"] = ssl_context
     async with aiohttp.ClientSession() as session:
         async with session.post(userUrl, json=payload) as res:
             if res.status != 200:

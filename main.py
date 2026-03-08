@@ -27,9 +27,22 @@ load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 DPASTE_AUTH = os.getenv("DPASTE_AUTH")
+EMAIL = os.getenv("EMAIL_ADDRESS")
+DISCORD = os.getenv("DISCORD_USERNAME")
+
+contact = "" 
+if EMAIL or DISCORD:
+    contact = "(contact: "
+    if EMAIL:
+        contact += EMAIL
+        if DISCORD:
+            contact += " or "
+    if DISCORD:
+        contact += "@" + DISCORD + " on discord"
+    contact += ")"
 
 DPASTE_HEADERS = {
-    "User-Agent": "Circuit Maker Maker Discord Bot (contact: qestudios17@gmail.com or @skmgeek on discord)",
+    "User-Agent": "Circuit Maker Maker Discord Bot " + contact,
     "Authorization": f"Bearer {DPASTE_AUTH}",
 }
 

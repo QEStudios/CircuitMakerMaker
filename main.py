@@ -390,7 +390,7 @@ async def counter(ctx, min: int, max: int, direction: str):
     default=False,
     required=False
 )
-async def ksa(ctx, bits: int, subtract: bool):
+async def koggestone(ctx, bits: int, subtract: bool):
     await ctx.defer()
     save = generate.ksa(bits, subtract)
     file = saveToBytes(save)

@@ -31,5 +31,5 @@ def counter(minVal, maxVal, direction):
 def image(im, scale, transparency):
     return imageGen.image(im, scale, transparency)
 
-def ksa(bits):
-    return ksa(bits)
+def ksa(bits, subtract):
+    return adderGen.ksa(bits, subtract)

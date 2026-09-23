@@ -378,16 +378,21 @@ async def counter(ctx, min: int, max: int, direction: str):
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 
-@generateCommand.command(description="Generate Kogge-Stone adder")
+@generateCommand.command(description="Generate Kogge-Stone adder.")
 @option("bits",
-    description="Size of the adder",
+    description="Size of the adder.",
     min_value=1,
     default=8,
     required=True
 )
-async def ksa(ctx, bits: int):
+@option("subtract",
+    description="Whether to add a subtract function to the adder.",
+    default=False,
+    required=False
+)
+async def ksa(ctx, bits: int, subtract: bool):
     await ctx.defer()
-    save = generate.ksa(bits)
+    save = generate.ksa(bits, subtract)
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 

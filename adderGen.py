@@ -1,7 +1,7 @@
 import cm2py as cm2
 import math
 
-def ksa(bits: int):
+def ksa(bits: int, subtract: bool):
     save = cm2.Save()
 
     a = []
@@ -14,8 +14,16 @@ def ksa(bits: int):
             save.addConnection(lhs[i], rhs[i])
 
     for dx in range(bits):
-        a.append(save.addBlock(cm2.NODE, (dx,0,-1)))
-        b.append(save.addBlock(cm2.NODE, (dx,0,0)))
+        if subtract:
+            a_node = save.addBlock((cm2.NODE), (dx, 0, 1))
+            b_node = save.addBlock((cm2.NODE), (dx, 0, 2))
+            a.append(save.addBlock(cm2.OR, (dx,0,-1)))
+            b.append(save.addBlock(cm2.XOR, (dx,0,0)))
+            save.addConnection(a_node, a[dx])
+            save.addConnection(b_node, b[dx])
+        else:
+            a.append(save.addBlock(cm2.NODE, (dx,0,-1)))
+            b.append(save.addBlock(cm2.NODE, (dx,0,0)))
         p.append(save.addBlock(cm2.XOR, (dx,0,-2)))
         g.append(save.addBlock(cm2.AND, (dx,0,-3)))
         save.addConnection(a[dx], p[dx])
@@ -89,5 +97,10 @@ def ksa(bits: int):
 
     save.addConnection(cin, out[bits-1])
 
+    if subtract:
+        sub = save.addBlock(cm2.NODE, (bits,0,0))
+        save.addConnection(sub, cin)
+        for dx in range(bits):
+            save.addConnection(sub, b[dx])
 
     return save

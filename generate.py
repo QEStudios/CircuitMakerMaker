@@ -1,6 +1,7 @@
 import clockGen
 import counterGen
 import imageGen
+import adderGen
 
 import math
 
@@ -29,3 +30,6 @@ def counter(minVal, maxVal, direction):
 
 def image(im, scale, transparency):
     return imageGen.image(im, scale, transparency)
+
+def ksa(bits):
+    return ksa(bits)

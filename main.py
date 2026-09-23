@@ -30,7 +30,7 @@ DPASTE_AUTH = os.getenv("DPASTE_AUTH")
 EMAIL = os.getenv("EMAIL_ADDRESS")
 DISCORD = os.getenv("DISCORD_USERNAME")
 
-contact = "" 
+contact = ""
 if EMAIL or DISCORD:
     contact = "(contact: "
     if EMAIL:
@@ -378,6 +378,23 @@ async def counter(ctx, min: int, max: int, direction: str):
     file = saveToBytes(save)
     await ctx.respond("Here's your generated save!", file=file)
 
+@generateCommand.command(description="Generate Kogge-Stone adder.")
+@option("bits",
+    description="Size of the adder.",
+    min_value=1,
+    default=8,
+    required=True
+)
+@option("subtract",
+    description="Whether to add a subtract function to the adder.",
+    default=False,
+    required=False
+)
+async def koggestone(ctx, bits: int, subtract: bool):
+    await ctx.defer()
+    save = generate.ksa(bits, subtract)
+    file = saveToBytes(save)
+    await ctx.respond("Here's your generated save!", file=file)
 
 @generateCommand.command(description="Convert an image into a save.")
 @option("image", discord.Attachment, description="The image to convert.")

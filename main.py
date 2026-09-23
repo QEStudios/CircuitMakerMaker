@@ -382,6 +382,7 @@ async def counter(ctx, min: int, max: int, direction: str):
 @option("bits",
     description="Size of the adder.",
     min_value=1,
+    max_value=8192,
     default=8,
     required=True
 )
